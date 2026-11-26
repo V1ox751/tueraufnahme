@@ -1,6 +1,6 @@
 /* Türaufnahme – Service Worker: hält die App offline verfügbar. */
-var CACHE = 'tueraufnahme-v1';
-var ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-512.png'];
+var CACHE = 'tueraufnahme-v2';
+var ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-512.png', './logo-full.png', './logo-mark.png'];
 
 function clean(res) {
   // Safari mag keine weitergeleiteten Antworten aus dem Cache bei Navigationen

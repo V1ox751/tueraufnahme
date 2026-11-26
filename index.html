@@ -8,143 +8,209 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Türaufnahme">
 <meta name="format-detection" content="telephone=no">
-<meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#f2f2f7">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-180.png">
-<title>Türaufnahme</title>
+<title>Türaufnahme · E+S Brandschutz</title>
 <style>
-:root{--bg:#eef0f3;--card:#fff;--tx:#14181f;--mu:#5d6675;--li:#d5dae1;--pri:#0b5cd5;--ok:#13803b;--okbg:#e3f4e8;--wa:#a84a00;--wabg:#fff1dc;--da:#c4161c;--dabg:#fdecec}
+:root{
+  --bg:#f2f2f7; --cell:#fff; --label:#000; --l2:rgba(60,60,67,.6); --l3:rgba(60,60,67,.3); --sep:rgba(60,60,67,.2);
+  --fill:rgba(118,118,128,.12); --press:#e5e5ea;
+  --tint:#1f6cb0; --tintbg:rgba(31,108,176,.12); --navy:#1e486c;
+  --green:#34c759; --greenT:#248a3d; --orange:#ff9500; --orangeT:#c25e00; --red:#ff3b30; --redT:#d70015; --indigo:#5856d6; --gray:#8e8e93;
+  --r:22px;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue","Segoe UI",Roboto,Arial,sans-serif;
+  --round:ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  color-scheme:light;
+}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%}
-button,input,textarea{font:inherit;color:inherit}
-button,label,summary{touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none}
+html,body{margin:0;background:var(--bg);color:var(--label);font-family:var(--font);font-size:17px;line-height:1.3;letter-spacing:-.41px;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+button,input,textarea{font:inherit;color:inherit;letter-spacing:inherit}
+button,label,summary{touch-action:manipulation;cursor:pointer;-webkit-user-select:none;user-select:none}
 .hidden{display:none!important}
 .vh{position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0}
+.ic{width:22px;height:22px;flex:none;display:block}
 
-header.top{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--li);display:flex;align-items:center;gap:6px;padding:6px 10px;padding-top:calc(6px + env(safe-area-inset-top));min-height:56px}
-.top .ttl{flex:1;font-weight:800;font-size:20px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.top .ttl.left{text-align:left;padding-left:4px}
-.top .back{background:none;border:0;color:var(--pri);font-size:17px;font-weight:600;padding:10px 2px;width:100px;flex:none;text-align:left}
-.top .side{width:100px;flex:none;text-align:right;font-size:13px;color:var(--mu)}
-.top .side.flash{color:var(--ok);font-weight:700}
-.top .hbtn{background:var(--pri);color:#fff;border:0;border-radius:10px;font-weight:700;padding:10px 16px;font-size:16px}
+/* ---------- Navigationsleiste ---------- */
+.nav{position:sticky;top:0;z-index:20;padding-top:env(safe-area-inset-top);transition:background-color .25s,box-shadow .25s}
+.nav.solid,.nav.scrolled{background:rgba(242,242,247,.82);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%)}
+.nav.scrolled{box-shadow:0 .5px 0 rgba(0,0,0,.16)}
+.nav-in{height:56px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:0 16px;max-width:680px;margin:0 auto}
+.nl{justify-self:start;display:flex;align-items:center;gap:8px}
+.nr{justify-self:end;display:flex;align-items:center}
+.nt{font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw;transition:opacity .2s}
+.nav.lg .nt{opacity:0}
+.nav.lg.tshow .nt{opacity:1}
+.saved{font-size:13px;color:var(--l2);display:flex;align-items:center;gap:4px;transition:color .2s;letter-spacing:-.08px}
+.saved .ic{width:15px;height:15px;stroke-width:2.6}
+.saved.flash{color:var(--greenT);font-weight:600}
 
-main{padding:12px 12px calc(110px + env(safe-area-inset-bottom));max-width:720px;margin:0 auto}
-.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 2px rgba(0,0,0,.07)}
-h3,.lbl{display:block;margin:0 0 8px;font-size:14px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.04em}
-.lbl.sp{margin-top:16px}
-input[type=text],textarea{width:100%;font-size:18px;padding:12px 14px;border:1.5px solid var(--li);border-radius:10px;background:#fff;-webkit-appearance:none;appearance:none;margin:0}
-textarea{resize:vertical;min-height:84px}
-input:focus,textarea:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 3px rgba(11,92,213,.15)}
-.hint{color:var(--mu);font-size:14px;margin:8px 0 0}
+/* Glas-Knöpfe */
+.gbtn{height:44px;min-width:44px;border:0;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 16px;font-size:17px;font-weight:600;color:var(--label);
+  background:rgba(255,255,255,.78);-webkit-backdrop-filter:blur(14px) saturate(180%);backdrop-filter:blur(14px) saturate(180%);
+  box-shadow:0 0 0 .5px rgba(0,0,0,.06),0 2px 12px rgba(0,0,0,.08),inset 0 1px 0 rgba(255,255,255,.9)}
+.gbtn.circ{width:44px;padding:0}
+.gbtn.tint{color:var(--tint)}
+.gbtn:active,.cap:active,.chip:active,.stp:active,.th:active{transform:scale(.96)}
 
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.chips.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:0}
-.chip{min-height:46px;padding:0 14px;border:1.5px solid #c3c9d2;border-radius:12px;background:#fff;font-weight:650;font-size:16px;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.1}
-.g5 .chip{padding:0 2px;font-size:16px}
-.g5 .chip.oth{font-size:14px}
-.chips.sm .chip{min-height:40px;font-size:15px;font-weight:500;padding:0 12px;border-radius:20px}
-.chip.on{background:var(--pri);border-color:var(--pri);color:#fff}
-#gOther{margin-top:10px}
+/* ---------- Seite ---------- */
+.pg{padding:4px 0 calc(116px + env(safe-area-inset-bottom));max-width:680px;margin:0 auto}
+.hero{padding:2px 20px 20px}
+.brand{height:30px;display:block;margin:0 0 14px}
+.lt{font-size:34px;line-height:41px;font-weight:700;letter-spacing:.37px;margin:0}
+.kbtn{display:inline-flex;align-items:center;gap:4px;border:0;background:none;padding:4px 0 0;font-size:17px;color:var(--l2);max-width:100%;text-align:left}
+.kbtn span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kbtn .ic{width:14px;height:14px;stroke-width:3;color:var(--l3)}
+.hero.c{text-align:center;padding-top:36px}
+.hero.c .brand{height:58px;margin:0 auto 22px}
+.sub{font-size:17px;color:var(--l2);margin:8px 0 0}
 
-.nrrow{display:flex;align-items:center;gap:10px;margin-top:14px}
-.nrrow .lbl{margin:0;width:34px}
-.nrbtn{width:54px;height:54px;border-radius:12px;border:1.5px solid #c3c9d2;background:#fff;font-size:30px;font-weight:600;line-height:1;padding:0}
-#nr{width:84px!important;text-align:center;font-size:24px!important;font-weight:800;padding:10px 4px!important}
-.kenn{flex:1;min-width:0;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:800;font-size:21px;color:var(--pri)}
-.warn{margin-top:10px;background:var(--wabg);color:var(--wa);border-radius:10px;padding:10px 12px;font-weight:600;font-size:15px}
+/* ---------- Listen (inset grouped) ---------- */
+.sec{margin:0 16px 30px}
+.sh{font-size:13px;line-height:18px;color:var(--l2);text-transform:uppercase;letter-spacing:-.08px;padding:0 20px 7px}
+.sf{font-size:13px;line-height:18px;color:var(--l2);padding:7px 20px 0;letter-spacing:-.08px}
+.sf.warnf{color:var(--orangeT);font-weight:600}
+.grp{background:var(--cell);border-radius:var(--r);overflow:hidden}
+.grp+.grp{margin-top:12px}
+.cell{position:relative;display:flex;align-items:center;gap:12px;min-height:52px;padding:8px 18px;background:var(--cell);width:100%;border:0;margin:0;text-align:left;font-size:17px;color:var(--label);list-style:none}
+.grp>.cell:not(:first-child)::before{content:"";position:absolute;top:0;left:18px;right:0;border-top:.5px solid var(--sep)}
+.grp>.cell.ico:not(:first-child)::before{left:60px}
+.grp>.row:not(:first-child)::before{left:80px}
+button.cell:active,label.cell.link:active,summary.cell:active,label.cell.tap:active{background:var(--press)}
+.cell .ct{flex:1;min-width:0}
+.cell .cv{color:var(--l2);text-align:right;white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
+.chev{width:14px!important;height:14px!important;color:var(--l3);stroke-width:3}
+.sq{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+.sq .ic{width:18px;height:18px;stroke-width:2.2}
+.cell.blk{display:block;padding:12px 16px}
+.cell.ctr{justify-content:center;font-weight:600}
+.cell.dest{justify-content:center;color:var(--redT)}
+.cell.tintc{justify-content:center;color:var(--tint);font-weight:600}
+.cell.step .ct{font-size:16px;letter-spacing:-.32px}
+.cell.step img{width:30px;height:30px;border-radius:8px;flex:none;box-shadow:0 0 0 .5px rgba(0,0,0,.12)}
 
-.pblock+.pblock{margin-top:16px;padding-top:14px;border-top:1px solid var(--li)}
-.phead{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.phead h3{margin:0}
-.okb{color:var(--ok);font-weight:800;font-size:15px}
-.camBig{display:flex;align-items:center;justify-content:center;gap:10px;min-height:92px;border:2px dashed var(--pri);border-radius:12px;color:var(--pri);font-weight:800;font-size:18px;background:#f2f6fe;text-align:center;padding:8px}
-.camBig .ic{font-size:28px}
+/* Eingabezeilen */
+.fld .k{width:96px;flex:none}
+.fld input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:17px;padding:10px 0;color:var(--label);caret-color:var(--tint);-webkit-appearance:none;appearance:none;border-radius:0}
+input::placeholder,textarea::placeholder{color:var(--l3);opacity:1}
+textarea{display:block;width:100%;border:0;outline:0;resize:none;font-size:17px;min-height:92px;background:transparent;caret-color:var(--tint);padding:2px 2px;line-height:1.35}
+
+/* Auswahl-Kapseln */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{height:38px;padding:0 15px;border:0;border-radius:999px;background:var(--fill);color:var(--label);font-size:15px;font-weight:500;letter-spacing:-.24px;display:inline-flex;align-items:center;justify-content:center;transition:background-color .15s,color .15s}
+.chip.on{background:var(--tint);color:#fff}
+.gg{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.gg .chip{height:44px;padding:0 2px;font-size:16px;font-weight:600}
+.gg .chip.oth{font-size:15px}
+.mk{font-size:13px;color:var(--l2);margin:0 2px 9px;text-transform:uppercase;letter-spacing:-.08px}
+.seg{display:flex;background:var(--fill);border-radius:999px;padding:3px;gap:2px}
+.seg .chip{flex:1;height:38px;background:transparent;font-weight:500}
+.seg .chip.on{background:#fff;color:var(--label);font-weight:600;box-shadow:0 3px 8px rgba(0,0,0,.12),0 0 0 .5px rgba(0,0,0,.04)}
+
+/* Stepper Nr. */
+.nrc .k{flex:1}
+.stepper{display:flex;align-items:center;gap:8px}
+.stp{width:50px;height:42px;border:0;border-radius:999px;background:var(--fill);font-size:26px;font-weight:400;color:var(--label);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
+#nr{width:66px;height:42px;text-align:center;font-family:var(--round);font-size:21px;font-weight:700;border:0;border-radius:14px;background:var(--fill);outline:0;color:var(--label);-webkit-appearance:none;appearance:none;padding:0;letter-spacing:0}
+#nr:focus{box-shadow:0 0 0 2px var(--tint)}
+
+/* Fotos */
+.pblock .ph .ct{font-weight:600}
+.okb{color:var(--greenT)!important;font-weight:600}
+.okb .ic{width:17px;height:17px;stroke-width:2.8}
+.missv{color:var(--orangeT)!important;font-weight:600}
+.camBig{display:flex;align-items:center;justify-content:center;gap:10px;height:56px;border-radius:999px;background:var(--tintbg);color:var(--tint);font-size:17px;font-weight:600}
+.camBig .ic{width:24px;height:24px}
+.camBig:active{background:rgba(31,108,176,.2)}
 .thumbs{display:flex;flex-wrap:wrap;gap:8px}
-.th{width:92px;height:92px;border-radius:10px;overflow:hidden;border:1px solid var(--li);padding:0;background:#eceff3;display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--mu)}
+.th{width:78px;height:78px;border-radius:14px;overflow:hidden;border:0;padding:0;background:var(--fill);display:flex;align-items:center;justify-content:center;color:var(--l2);font-size:22px}
 .th img{width:100%;height:100%;object-fit:cover;display:block}
-.th.add{border:2px dashed var(--pri);color:var(--pri);font-size:36px;background:#f2f6fe;font-weight:400}
-.th.spin{font-size:14px;font-weight:700;color:var(--pri);animation:pulse 1s infinite alternate}
-@keyframes pulse{from{opacity:.4}to{opacity:1}}
-.prow{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;margin-top:10px}
-.link{color:var(--pri);font-size:15px;text-decoration:underline;padding:6px 0}
-.chk{display:flex;align-items:center;gap:8px;font-size:15px;padding:4px 0}
-.chk input{width:24px;height:24px;margin:0;accent-color:var(--pri)}
+.th.add{background:var(--tintbg);color:var(--tint)}
+.th.add .ic{width:28px;height:28px}
+.th.spin{font-size:12px;font-weight:600;color:var(--tint);letter-spacing:-.08px;animation:pulse 1s infinite alternate}
+@keyframes pulse{from{opacity:.45}to{opacity:1}}
+.link .ct{color:var(--tint)}
+.link .ic{color:var(--tint)}
 
-details.card>summary{list-style:none;font-weight:800;font-size:17px;display:flex;align-items:center;gap:8px;min-height:32px}
-details.card>summary::-webkit-details-marker{display:none}
-details.card>summary::before{content:"▸";font-size:18px;color:var(--pri);width:16px}
-details.card[open]>summary::before{content:"▾"}
-details.card>summary .cnt{color:var(--mu);font-weight:500;font-size:15px}
-.more{margin-top:6px}
+/* Schalter */
+.swl{position:relative;width:51px;height:31px;flex:none}
+.swl input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;z-index:1;cursor:pointer}
+.sw{position:absolute;inset:0;border-radius:999px;background:rgba(120,120,128,.16);transition:background-color .25s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.15),0 3px 1px rgba(0,0,0,.06);transition:transform .25s}
+.swl input:checked+.sw{background:var(--green)}
+.swl input:checked+.sw::after{transform:translateX(20px)}
 
-footer.bar{position:fixed;left:0;right:0;bottom:0;z-index:10;background:rgba(255,255,255,.97);border-top:1px solid var(--li);display:flex;gap:10px;padding:10px 12px calc(10px + env(safe-area-inset-bottom))}
-.btn{flex:1;min-height:54px;border-radius:12px;border:0;font-weight:750;font-size:17px;padding:0 14px;display:flex;align-items:center;justify-content:center;gap:8px;text-align:center}
-.btn.pri{background:var(--pri);color:#fff}
-.btn.sec{background:#e4e8ee;color:var(--tx)}
-.btn.ok{background:var(--ok);color:#fff}
-.btn.danger{background:var(--da);color:#fff}
-.btn.dout{background:#fff;border:1.5px solid var(--da);color:var(--da);width:100%;margin-top:6px;flex:none}
-.btn.w{width:100%;flex:none}
-.btn+.btn.w{margin-top:10px}
-.btn:disabled{opacity:.5}
-.bar .btn.pri{flex:1.7}
+/* Aufklappbereich */
+details.grp>summary::-webkit-details-marker{display:none}
+details.grp>summary .chev{transition:transform .2s}
+details.grp[open]>summary .chev{transform:rotate(90deg)}
 
-.kunde{display:flex;align-items:baseline;gap:10px;width:100%;background:none;border:0;padding:0;text-align:left}
-.kunde .lbl{margin:0}
-.kunde .kv{flex:1;font-size:19px;font-weight:800;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.kunde .ed{color:var(--pri);font-size:15px}
-.stats{display:flex;gap:8px;margin-top:12px}
-.stats>div{flex:1;background:#f4f6f8;border-radius:10px;padding:8px 6px;text-align:center}
-.stats b{display:block;font-size:26px;font-weight:800;line-height:1.1}
-.stats span{font-size:13px;color:var(--mu)}
-.stats .w{background:var(--wabg)}.stats .w b,.stats .w span{color:var(--wa)}
-.pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.pill{display:inline-block;font-size:13px;font-weight:650;padding:5px 10px;border-radius:20px;background:#eceff3;color:var(--mu)}
-.pill.ok{background:var(--okbg);color:var(--ok)}
-.pill.warn{background:var(--wabg);color:var(--wa)}
-.pill.err{background:var(--dabg);color:var(--da)}
+/* ---------- Übersicht ---------- */
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 16px 12px}
+.tile{background:var(--cell);border-radius:var(--r);padding:13px 14px 12px}
+.tile b{display:block;font-family:var(--round);font-size:30px;font-weight:700;line-height:1.1;letter-spacing:0}
+.tile span{font-size:13px;color:var(--l2);letter-spacing:-.08px}
+.tile.warn b{color:var(--orangeT)}
+.stat{display:flex;flex-wrap:wrap;gap:6px 16px;padding:0 20px;margin:0 16px 28px;font-size:13px;color:var(--l2);letter-spacing:-.08px}
+.stat span{display:inline-flex;align-items:center;gap:5px}
+.stat .ic{width:15px;height:15px;stroke-width:2.4}
+.stat .ok{color:var(--greenT);font-weight:600}
+.stat .warn{color:var(--orangeT);font-weight:600}
+.row{min-height:76px;padding:10px 14px 10px 14px}
+.thumb{width:52px;height:52px;border-radius:12px;overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center;background:var(--fill);color:var(--l2)}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb.miss{background:rgba(255,149,0,.14);color:var(--orange)}
+.thumb .ic{width:24px;height:24px}
+.rt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.r1{font-size:17px;font-weight:600;display:flex;align-items:center;gap:6px;letter-spacing:-.41px}
+.r2,.r3{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.r2{font-size:15px;color:var(--l2);letter-spacing:-.24px}
+.r3{font-size:13px;color:var(--l3);letter-spacing:-.08px}
+.badge{font-size:12px;font-weight:600;letter-spacing:-.08px;padding:2px 8px;border-radius:999px;color:var(--orangeT);background:rgba(255,149,0,.14)}
+.empty{text-align:center;color:var(--l2);padding:26px 36px 30px}
+.empty .ic{width:54px;height:54px;color:var(--l3);margin:0 auto 12px;stroke-width:1.5}
+.empty b{display:block;color:var(--label);font-size:20px;font-weight:600;margin-bottom:4px}
+.ver{text-align:center;color:var(--l3);font-size:12px;margin:8px 0 0;letter-spacing:0}
+.note .ct{font-size:15px;letter-spacing:-.24px;line-height:1.35}
 
-.banner{border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:15px}
-.banner.info{background:#e6efff;color:#0a3a86}
-.banner.warn{background:var(--wabg);color:#6e3200}
-.banner.err{background:var(--dabg);color:#7d0d10}
-.banner .bb{margin-top:10px;display:block;width:100%;min-height:44px;border:0;border-radius:10px;font-weight:700;font-size:16px;background:rgba(0,0,0,.08);color:inherit}
+/* ---------- untere Leiste ---------- */
+.tbfade{position:fixed;left:0;right:0;bottom:0;height:calc(104px + env(safe-area-inset-bottom));z-index:19;pointer-events:none;background:linear-gradient(rgba(242,242,247,0),rgba(242,242,247,.94) 58%)}
+.tb{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;gap:10px;padding:0 16px calc(12px + env(safe-area-inset-bottom));max-width:680px;margin:0 auto}
+.cap{flex:1;height:54px;border:0;border-radius:999px;font-size:17px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 18px;white-space:nowrap}
+.cap .ic{width:21px;height:21px;stroke-width:2.3}
+.cap.pri{background:var(--tint);color:#fff;box-shadow:0 8px 20px rgba(31,108,176,.32)}
+.cap.ok{background:var(--green);color:#fff}
+.cap.glass{color:var(--label);background:rgba(255,255,255,.8);-webkit-backdrop-filter:blur(14px) saturate(180%);backdrop-filter:blur(14px) saturate(180%);box-shadow:0 0 0 .5px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.1),inset 0 1px 0 rgba(255,255,255,.9)}
+.cap.sec2{background:var(--fill);color:var(--tint)}
+.cap.w{width:100%;flex:none}
+.cap:disabled{opacity:.4}
+.tb .cap.pri{flex:1.55}
 
-.grp h2{font-size:14px;color:var(--mu);margin:18px 4px 8px;text-transform:uppercase;letter-spacing:.05em;font-weight:800}
-.row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:0;border-radius:12px;padding:10px 12px;margin-bottom:8px;box-shadow:0 1px 2px rgba(0,0,0,.07);min-height:72px}
-.row .kn{font-weight:800;font-size:18px;min-width:74px}
-.row .kn .dup{color:var(--wa)}
-.row .info{flex:1;min-width:0}
-.row .info b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.row .info small{display:block;color:var(--mu);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:1em}
-.row .st{width:54px;height:54px;border-radius:8px;overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1.15;text-align:center;font-weight:700;background:#eceff3}
-.st img{width:100%;height:100%;object-fit:cover}
-.st.miss{background:var(--wabg);color:var(--wa)}
-.st.none{color:var(--mu)}
-.empty{text-align:center;color:var(--mu);padding:40px 10px;font-size:17px}
-.ver{text-align:center;color:#9aa2ad;font-size:12px;margin-top:24px}
+/* Export */
+.prog{height:6px;border-radius:999px;background:var(--fill);overflow:hidden;margin-top:12px}
+.prog i{display:block;height:100%;width:0;background:var(--tint);transition:width .2s}
+.cap+.cap{margin-top:10px}
 
-.setup{padding-top:calc(40px + env(safe-area-inset-top))}
-.setup h1{font-size:30px;margin:0 0 6px}
-.setup p{color:var(--mu);margin:0 0 22px}
-.setup .btn{margin-top:18px}
-
-progress{width:100%;height:14px;margin-top:6px}
-.zipok{background:var(--okbg);color:var(--ok);border-radius:10px;padding:10px 12px;font-weight:650;margin-bottom:10px;font-size:15px;word-break:break-all}
-
+/* ---------- Großansicht ---------- */
 #ov{position:fixed;inset:0;z-index:50;background:#000;display:flex;flex-direction:column}
-#ov .ovt{color:#ddd;padding:calc(10px + env(safe-area-inset-top)) 14px 8px;font-size:15px;text-align:center}
+#ov .ovt{display:flex;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top)) 16px 8px;color:#fff}
+#ov .ovtitle{flex:1;text-align:center;font-size:15px;font-weight:600;letter-spacing:-.24px}
 #ov .sc{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;display:flex;align-items:center;justify-content:center}
 #ov .sc img{max-width:100%;max-height:100%;object-fit:contain;display:block}
 #ov .sc.zoom{display:block}
 #ov .sc.zoom img{max-width:none;max-height:none;width:300%}
-#ov .ovb{display:flex;gap:10px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#111}
+#ov .ovb{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px calc(14px + env(safe-area-inset-bottom));color:rgba(255,255,255,.6);font-size:13px}
+.gbtn.dark{background:rgba(72,72,74,.7);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.14)}
+.gbtn.dark.red{color:#ff453a}
+.spacer{width:44px;flex:none}
 
-#toast{position:fixed;left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:60;display:flex;justify-content:center;pointer-events:none}
-#toast div{background:#1f2937;color:#fff;padding:12px 16px;border-radius:12px;font-size:16px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.25);max-width:560px;text-align:center}
-#toast div.err{background:var(--da)}
+/* ---------- Hinweis-Kapsel ---------- */
+#toast{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top) + 62px);z-index:60;display:flex;justify-content:center;pointer-events:none;padding:0 16px}
+#toast div{display:flex;align-items:center;gap:8px;background:rgba(28,28,30,.88);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);color:#fff;padding:11px 18px;border-radius:999px;font-size:15px;font-weight:600;letter-spacing:-.24px;box-shadow:0 8px 28px rgba(0,0,0,.22);max-width:100%;text-align:center;animation:tin .25s ease-out}
+#toast div.err{background:rgba(215,0,21,.94);border-radius:18px}
+@keyframes tin{from{opacity:0;transform:translateY(-10px) scale(.96)}to{opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -158,7 +224,7 @@ progress{width:100%;height:14px;margin-top:6px}
 'use strict';
 
 /* ================= Konfiguration ================= */
-var VERSION = '1.0 · 26.11.2026';
+var VERSION = '1.1 · 26.11.2026';
 var KEY = 'tueraufnahme.v1';
 var VIEWKEY = 'tueraufnahme.view';
 var LOGKEY = 'tueraufnahme.log';
@@ -174,6 +240,33 @@ var BEREICH_DEFAULT = ['Treppenhaus', 'Flur', 'Kellerflur', 'Technikraum', 'Heiz
 var MORE_FIELDS = ['anforderung', 'fluegel', 'material', 'hersteller', 'fsa', 'kundenNr'];
 var PHOTO_MAX = { typenschild: 2560, tuer: 2048 };
 
+/* ================= Symbole (im Stil der SF Symbols) ================= */
+var ICONS = {
+  back: '<path d="M15 4.5 7.5 12l7.5 7.5"/>',
+  chev: '<path d="M9 5l7 7-7 7"/>',
+  camera: '<path d="M3 8.6A2.6 2.6 0 0 1 5.6 6h1.6l1.6-2.2h6.4L16.8 6h1.6A2.6 2.6 0 0 1 21 8.6v8.8a2.6 2.6 0 0 1-2.6 2.6H5.6A2.6 2.6 0 0 1 3 17.4z"/><circle cx="12" cy="12.8" r="3.6"/>',
+  photo: '<rect x="3" y="4.5" width="18" height="15" rx="3"/><circle cx="8.6" cy="9.6" r="1.6"/><path d="M21 15.5l-4.8-4.8L7.5 19.5"/>',
+  share: '<path d="M12 3.5v11.5M8 7.3l4-3.8 4 3.8"/><path d="M8.5 10.5H7a2.5 2.5 0 0 0-2.5 2.5v5.5A2.5 2.5 0 0 0 7 21h10a2.5 2.5 0 0 0 2.5-2.5V13a2.5 2.5 0 0 0-2.5-2.5h-1.5"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  trash: '<path d="M4 6.5h16M9.5 6.5V4.5h5v2M6 6.5l1 13a1.8 1.8 0 0 0 1.8 1.5h6.4A1.8 1.8 0 0 0 17 19.5l1-13M10 10.5v6.5M14 10.5v6.5"/>',
+  xmark: '<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
+  list: '<path d="M9 6.5h11M9 12h11M9 17.5h11"/><path d="M4.5 6.5h.01M4.5 12h.01M4.5 17.5h.01" stroke-width="3"/>',
+  next: '<path d="M5 12h13.5M13 6.5l5.5 5.5-5.5 5.5"/>',
+  door: '<path d="M6 21V4.2A1.2 1.2 0 0 1 7.2 3h9.6A1.2 1.2 0 0 1 18 4.2V21M3.5 21h17"/><path d="M14.5 12.5v.01" stroke-width="3"/>',
+  tag: '<rect x="3" y="6" width="18" height="12" rx="2.5"/><path d="M7 10h6M7 14h9"/>',
+  zip: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M11 7h1M11 10h1M11 13h1M10.5 16h2v2h-2z"/>',
+  wifi: '<path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.6 16a5 5 0 0 1 6.8 0"/><path d="M12 19.5h.01" stroke-width="3"/>',
+  clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  warn: '<path d="M10.3 4.2 2.8 17.5A2 2 0 0 0 4.5 20.5h15a2 2 0 0 0 1.7-3L13.7 4.2a2 2 0 0 0-3.4 0z"/><path d="M12 9.5v4M12 17h.01"/>',
+  download: '<path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 20h14"/>',
+  info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8h.01"/>',
+  ellipsis: '<path d="M6 12h.01M12 12h.01M18 12h.01" stroke-width="3.2"/>',
+  doc: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M8.5 13h7M8.5 16.5h5"/>'
+};
+function ic(n, cls) { return '<svg class="ic' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONS[n] || '') + '</svg>'; }
+function sq(n, color) { return '<span class="sq" style="background:' + color + '">' + ic(n) + '</span>'; }
+
 /* ================= Helfer ================= */
 function $(s, r) { return (r || document).querySelector(s); }
 var app = $('#app'), ov = $('#ov'), toastEl = $('#toast');
@@ -188,20 +281,21 @@ function fmtT(iso) { var d = new Date(iso); return pad2(d.getHours()) + ':' + pa
 function errMsg(e) { if (!e) return 'unbekannt'; if (e.name === 'QuotaExceededError') return 'Speicher voll – bitte exportieren'; return e.message || e.name || String(e); }
 function fmtMB(bytes) { return (bytes / 1048576).toFixed(bytes > 10485760 ? 0 : 1).replace('.', ',') + ' MB'; }
 function uniq(arr) { var s = {}, out = []; arr.forEach(function (v) { var k = String(v).toLowerCase(); if (v && !s[k]) { s[k] = 1; out.push(v); } }); return out; }
+function plural(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
 
 function logErr(where, e) {
   var msg = nowISO() + ' [' + where + '] ' + (e && e.name ? e.name + ': ' : '') + (e && e.message ? e.message : String(e));
   try { console.error(msg, e); } catch (x) {}
   try { var l = JSON.parse(localStorage.getItem(LOGKEY) || '[]'); l.push(msg); localStorage.setItem(LOGKEY, JSON.stringify(l.slice(-150))); } catch (x) {}
 }
-window.addEventListener('error', function (e) { logErr('window', e.error || e.message); toast('⚠ Fehler: ' + (e.message || '') + ' – Daten sind gespeichert.', 'err', 5000); });
-window.addEventListener('unhandledrejection', function (e) { logErr('promise', e.reason); toast('⚠ Fehler: ' + errMsg(e.reason), 'err', 5000); });
+window.addEventListener('error', function (e) { logErr('window', e.error || e.message); toast('Fehler: ' + (e.message || '') + ' – Daten sind gespeichert.', 'err', 5000); });
+window.addEventListener('unhandledrejection', function (e) { logErr('promise', e.reason); toast('Fehler: ' + errMsg(e.reason), 'err', 5000); });
 
 var toastTimer = null;
 function toast(msg, kind, ms) {
-  toastEl.innerHTML = '<div class="' + (kind || '') + '">' + esc(msg) + '</div>';
+  toastEl.innerHTML = '<div class="' + (kind || '') + '">' + (kind === 'err' ? ic('warn') : '') + '<span>' + esc(msg) + '</span></div>';
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(function () { toastEl.innerHTML = ''; }, ms || 2200);
+  toastTimer = setTimeout(function () { toastEl.innerHTML = ''; }, ms || 2000);
 }
 
 function isStandalone() {
@@ -236,11 +330,11 @@ function saveState() {
   try {
     localStorage.setItem(KEY, JSON.stringify(S));
     var el = $('#savedInd');
-    if (el) { el.textContent = '✓ gespeichert'; el.classList.add('flash'); clearTimeout(savedTimer); savedTimer = setTimeout(function () { el.classList.remove('flash'); }, 900); }
+    if (el) { el.classList.add('flash'); clearTimeout(savedTimer); savedTimer = setTimeout(function () { el.classList.remove('flash'); }, 900); }
     return true;
   } catch (e) {
     logErr('saveState', e);
-    toast('⚠ SPEICHERN FEHLGESCHLAGEN – bitte exportieren bzw. auf Papier weiter', 'err', 8000);
+    toast('SPEICHERN FEHLGESCHLAGEN – bitte exportieren bzw. auf Papier weiter', 'err', 8000);
     return false;
   }
 }
@@ -346,7 +440,7 @@ function hydrateThumbs(root) {
   var imgs = root.querySelectorAll('img[data-thumb]');
   Array.prototype.forEach.call(imgs, function (img) {
     getThumbURL(img.getAttribute('data-thumb')).then(function (u) {
-      if (u) img.src = u; else { var s = document.createElement('span'); s.textContent = '📷'; img.replaceWith(s); }
+      if (u) img.src = u; else { var s = document.createElement('span'); s.innerHTML = ic('photo'); img.replaceWith(s); }
     }).catch(function (e) { logErr('thumb', e); });
   });
 }
@@ -414,7 +508,7 @@ function addPhotos(files, doorId, kind) {
         });
       }).catch(function (e) {
         logErr('addPhoto', e);
-        toast('⚠ Foto NICHT gespeichert: ' + errMsg(e) + ' – bitte nochmal', 'err', 7000);
+        toast('Foto NICHT gespeichert: ' + errMsg(e) + ' – bitte nochmal', 'err', 7000);
       }).then(function () {
         pending[key]--;
         if (currentDoorId === doorId) renderPhotoSection();
@@ -452,7 +546,7 @@ function reconcile() {
       S.doors.forEach(function (d) { d.photos.sort(function (a, b) { return String(byId[a.id].createdAt).localeCompare(String(byId[b.id].createdAt)); }); });
       saveState();
     }
-    if (lost) { logErr('reconcile', new Error(lost + ' Foto(s) fehlen im Speicher')); toast('⚠ ' + lost + ' Foto(s) nicht mehr im Speicher', 'err', 7000); }
+    if (lost) { logErr('reconcile', new Error(lost + ' Foto(s) fehlen im Speicher')); toast(lost + ' Foto(s) nicht mehr im Speicher', 'err', 7000); }
   });
 }
 
@@ -479,21 +573,42 @@ function go(view, id) {
   else if (view === 'export') renderExport();
   else renderList();
   window.scrollTo(0, 0);
+  onScroll();
+}
+function onScroll() {
+  var n = $('#nav'); if (!n) return;
+  var y = window.scrollY || 0;
+  n.classList.toggle('scrolled', y > 4);
+  n.classList.toggle('tshow', y > 92);
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+
+function navBar(o) {
+  return '<header class="nav ' + (o.large ? 'lg' : 'solid') + '" id="nav"><div class="nav-in">' +
+    '<div class="nl">' + (o.back ? '<button type="button" class="gbtn circ" data-act="list" aria-label="Zurück zur Übersicht">' + ic('back') + '</button>' : '') + '</div>' +
+    '<div class="nt"' + (o.titleId ? ' id="' + o.titleId + '"' : '') + '>' + esc(o.title || '') + '</div>' +
+    '<div class="nr">' + (o.right || '') + '</div></div></header>';
+}
+function installSteps() {
+  return '<div class="grp">' +
+    '<div class="cell ico step">' + sq('share', '#0a84ff') + '<span class="ct">In Safari unten auf <b>Teilen</b> tippen</span></div>' +
+    '<div class="cell ico step">' + sq('plus', '#8e8e93') + '<span class="ct"><b>„Zum Home-Bildschirm“</b> wählen – ggf. etwas runterscrollen</span></div>' +
+    '<div class="cell ico step"><img src="icon-180.png" alt=""><span class="ct">Safari schließen, App <b>„Türaufnahme“</b> öffnen</span></div>';
 }
 
 /* ================= Ansicht: Start ================= */
 function renderSetup() {
   currentDoorId = null;
   app.innerHTML =
-    '<main class="setup">' +
-      '<h1>Türaufnahme</h1>' +
-      (isStandalone() ? '' : '<div class="banner info"><b>Zuerst als App aufs iPhone legen:</b><br>1. Unten auf <b>Teilen</b> tippen (Viereck mit Pfeil nach oben)<br>2. <b>„Zum Home-Bildschirm“</b> wählen (ggf. etwas runterscrollen) → Hinzufügen<br>3. Safari schließen und das neue Icon <b>„Türaufnahme“</b> öffnen<br>Danach nur noch über das Icon arbeiten.</div>') +
-      '<p>Einmal den Kunden eintragen, dann geht\'s los.</p>' +
-      '<label class="lbl" for="kunde">Kunde / Objekt</label>' +
-      '<input type="text" id="kunde" value="' + esc(S.kunde) + '" placeholder="z. B. Musterfirma, Hauptstr. 1" autocomplete="off" enterkeyhint="done">' +
-      '<button class="btn pri w" data-act="start">Los geht\'s</button>' +
+    '<main class="pg">' +
+      '<div class="hero c"><img class="brand" src="logo-full.png" alt="E+S Brandschutz"><h1 class="lt">Türaufnahme</h1><p class="sub">Türen erfassen, Typenschild fotografieren – fertig.</p></div>' +
+      (isStandalone() ? '' : '<div class="sec"><div class="sh">Zuerst als App aufs iPhone</div>' + installSteps() + '</div><div class="sf">Danach nur noch über das Icon arbeiten.</div></div>') +
+      '<div class="sec"><div class="sh">Objekt</div><div class="grp"><label class="cell fld"><span class="k">Kunde</span>' +
+        '<input type="text" id="kunde" value="' + esc(S.kunde) + '" placeholder="Name, Adresse" autocomplete="off" enterkeyhint="done"></label></div>' +
+        '<div class="sf">Einmal eintragen – gilt für alle Türen.</div></div>' +
       '<p class="ver">Version ' + esc(VERSION) + '</p>' +
-    '</main>';
+    '</main>' +
+    '<div class="tbfade"></div><footer class="tb"><button type="button" class="cap pri" data-act="start">Los geht\'s</button></footer>';
 }
 
 /* ================= Ansicht: Übersicht ================= */
@@ -505,29 +620,36 @@ function renderList() {
   var nPh = doors.reduce(function (s, d) { return s + d.photos.length; }, 0);
   var le = S.lastExport;
   var unsaved = doors.filter(function (d) { return !le || d.updatedAt > le.at; }).length;
-  var h = '<header class="top"><div class="ttl left">Türaufnahme</div><button class="hbtn" data-act="export">Export</button></header><main>';
-  if (dbFailed) h += '<div class="banner err"><b>⚠ Fotospeicher geht nicht:</b> ' + esc(dbFailed) + '<br>Bitte Safari normal (nicht „Privat“) nutzen. Notfalls Papier.</div>';
-  h += '<div class="card"><button class="kunde" data-act="edit-kunde"><span class="lbl">Kunde</span><span class="kv">' + esc(S.kunde) + '</span><span class="ed">ändern</span></button>' +
-       '<div class="stats"><div><b>' + n + '</b><span>Türen</span></div><div><b>' + nPh + '</b><span>Fotos</span></div><div class="' + (miss ? 'w' : '') + '"><b>' + miss + '</b><span>ohne Typenschild</span></div></div>' +
-       '<div class="pills"><span id="offl" class="pill">⏳ Offline wird vorbereitet…</span><span class="pill ' + (le ? 'ok' : '') + '">' + (le ? '✓ Letzter Export ' + fmtT(le.at) + ' Uhr' : 'Noch kein Export') + '</span></div></div>';
+  var h = navBar({ large: true, title: 'Türaufnahme', right: '<button type="button" class="gbtn tint" data-act="export">' + ic('share') + 'Export</button>' }) + '<main class="pg">';
+  h += '<div class="hero"><img class="brand" src="logo-full.png" alt="E+S Brandschutz"><h1 class="lt">Türaufnahme</h1>' +
+       '<button type="button" class="kbtn" data-act="edit-kunde"><span>' + esc(S.kunde) + '</span>' + ic('chev') + '</button></div>';
+  if (dbFailed) h += '<div class="sec"><div class="grp"><div class="cell ico note">' + sq('warn', 'var(--red)') + '<span class="ct"><b>Fotospeicher geht nicht:</b> ' + esc(dbFailed) + '. Bitte Safari normal (nicht „Privat“) nutzen, notfalls Papier.</span></div></div></div>';
+  h += '<div class="tiles"><div class="tile"><b>' + n + '</b><span>Türen</span></div><div class="tile"><b>' + nPh + '</b><span>Fotos</span></div>' +
+       '<div class="tile' + (miss ? ' warn' : '') + '"><b>' + miss + '</b><span>ohne Typenschild</span></div></div>';
+  h += '<div class="stat" id="stat"><span id="offl">' + ic('wifi') + 'Offline wird vorbereitet…</span><span class="' + (le ? 'ok' : '') + '">' + ic('clock') + (le ? 'Letzter Export ' + fmtT(le.at) + ' Uhr' : 'Noch kein Export') + '</span></div>';
   if (!isStandalone() && !S.hintDismissed) {
-    h += '<div class="banner info"><b>Tipp – als App aufs iPhone:</b> in Safari unten auf <b>Teilen</b> (Viereck mit Pfeil) → <b>„Zum Home-Bildschirm“</b>. Danach nur noch über das Icon arbeiten.<br><b>Wichtig:</b> Türen, die im Safari erfasst wurden, sieht man in der App nicht – und umgekehrt. Immer am selben Ort bleiben.<button class="bb" data-act="dismiss-hint">Verstanden</button></div>';
+    h += '<div class="sec"><div class="sh">Tipp: als App aufs iPhone</div>' + installSteps() +
+         '<button type="button" class="cell tintc" data-act="dismiss-hint">Verstanden</button></div>' +
+         '<div class="sf">Türen, die im Safari erfasst wurden, sieht man in der App nicht – und umgekehrt. Immer am selben Ort bleiben.</div></div>';
   }
-  if (n && unsaved >= 10) h += '<div class="banner warn"><b>Zwischensicherung:</b> ' + unsaved + ' Türen seit dem letzten Export. Kurz exportieren und „In Dateien sichern“.<button class="bb" data-act="export">Jetzt exportieren</button></div>';
-  if (!n) h += '<div class="empty">Noch keine Tür erfasst.<br>Unten auf <b>„＋ Neue Tür“</b> tippen.</div>';
-  var curG = null, grp = '';
+  if (n && unsaved >= 10) {
+    h += '<div class="sec"><div class="grp"><div class="cell ico note">' + sq('warn', 'var(--orange)') + '<span class="ct"><b>Zwischensicherung:</b> ' + plural(unsaved, 'Tür', 'Türen') + ' seit dem letzten Export.</span></div>' +
+         '<button type="button" class="cell tintc" data-act="export">Jetzt exportieren</button></div></div>';
+  }
+  if (!n) h += '<div class="empty">' + ic('door') + '<b>Noch keine Tür</b>Unten auf „Neue Tür“ tippen.</div>';
   var counts = {}; doors.forEach(function (d) { counts[d.geschoss] = (counts[d.geschoss] || 0) + 1; });
+  var curG = null;
   doors.forEach(function (d) {
     if (d.geschoss !== curG) {
-      if (curG !== null) grp += '</div>';
+      if (curG !== null) h += '</div></div>';
       curG = d.geschoss;
-      grp += '<div class="grp"><h2>' + esc(curG || '?') + ' · ' + counts[curG] + (counts[curG] === 1 ? ' Tür' : ' Türen') + '</h2>';
+      h += '<div class="sec"><div class="sh">' + esc(curG || '?') + ' · ' + plural(counts[curG], 'Tür', 'Türen') + '</div><div class="grp">';
     }
-    grp += rowHTML(d);
+    h += rowHTML(d);
   });
-  if (curG !== null) grp += '</div>';
-  h += grp + '<p class="ver">Version ' + esc(VERSION) + '</p></main>' +
-       '<footer class="bar"><button class="btn pri" data-act="new">＋ Neue Tür</button></footer>';
+  if (curG !== null) h += '</div></div>';
+  h += '<p class="ver">E+S Brandschutz · Version ' + esc(VERSION) + '</p></main>' +
+       '<div class="tbfade"></div><footer class="tb"><button type="button" class="cap pri" data-act="new">' + ic('plus') + 'Neue Tür</button></footer>';
   app.innerHTML = h;
   hydrateThumbs(app);
   checkOffline(0);
@@ -535,29 +657,31 @@ function renderList() {
 function rowHTML(d) {
   var ts = null, nT = 0;
   d.photos.forEach(function (p) { if (p.kind === 'typenschild' && !ts) ts = p; if (p.kind === 'tuer') nT++; });
-  var st;
-  if (ts) st = '<span class="st"><img data-thumb="' + esc(ts.id) + '" alt=""></span>';
-  else if (d.keinTypenschild) st = '<span class="st none">kein<br>Schild</span>';
-  else st = '<span class="st miss">Foto<br>fehlt</span>';
-  var l1 = [d.bereich, d.raum].filter(function (x) { return x && x.trim(); }).map(esc).join(' · ') || '<i style="color:#9aa2ad">ohne Bereich</i>';
-  var l2 = [d.schliesser, nT ? '📷 Tür ' + nT : '', d.bemerkung].filter(function (x) { return x && String(x).trim(); }).join(' · ');
-  return '<button class="row" data-act="open" data-id="' + esc(d.id) + '"><span class="kn">' + esc(kennung(d)) + (isDup(d) ? ' <span class="dup">⚠</span>' : '') + '</span>' +
-         '<span class="info"><b>' + l1 + '</b><small>' + esc(l2) + '</small></span>' + st + '</button>';
+  var lead, badge = '';
+  if (ts) lead = '<span class="thumb"><img data-thumb="' + esc(ts.id) + '" alt=""></span>';
+  else if (d.keinTypenschild) lead = '<span class="thumb">' + ic('tag') + '</span>';
+  else { lead = '<span class="thumb miss">' + ic('camera') + '</span>'; badge = '<span class="badge">Foto fehlt</span>'; }
+  if (isDup(d)) badge += '<span class="badge">Nr. doppelt</span>';
+  var l1 = [d.bereich, d.raum].filter(function (x) { return x && x.trim(); }).map(esc).join(' · ') || 'ohne Bereich';
+  var l2 = [d.schliesser, nT ? 'Tür-Foto' + (nT > 1 ? 's: ' + nT : '') : '', d.keinTypenschild ? 'kein Typenschild' : '', d.bemerkung].filter(function (x) { return x && String(x).trim(); }).join(' · ');
+  return '<button type="button" class="cell row" data-act="open" data-id="' + esc(d.id) + '">' + lead +
+    '<span class="rt"><span class="r1">' + esc(kennung(d)) + badge + '</span><span class="r2">' + l1 + '</span>' + (l2 ? '<span class="r3">' + esc(l2) + '</span>' : '') + '</span>' +
+    ic('chev', 'chev') + '</button>';
 }
 
 var offTimer = null;
-function setPill(el, cls, txt) { el.className = 'pill ' + cls; el.textContent = txt; }
+function setOffl(cls, txt) { var el = $('#offl'); if (!el) return; el.className = cls; el.innerHTML = ic(cls === 'ok' ? 'check' : cls === 'warn' ? 'warn' : 'wifi') + esc(txt); }
 function checkOffline(attempt) {
   clearTimeout(offTimer);
-  var el = $('#offl'); if (!el) return;
-  if (!('serviceWorker' in navigator) || !window.caches) { setPill(el, 'warn', '⚠ Offline nicht verfügbar'); return; }
+  if (!$('#offl')) return;
+  if (!('serviceWorker' in navigator) || !window.caches) { setOffl('warn', 'Offline nicht verfügbar'); return; }
   Promise.resolve().then(function () {
     return caches.match('index.html', { ignoreSearch: true });
   }).then(function (hit) {
-    var el2 = $('#offl'); if (!el2) return;
-    if (hit && navigator.serviceWorker.controller) { setPill(el2, 'ok', '✓ Offline bereit'); return; }
-    if (attempt < 40) { setPill(el2, '', '⏳ Offline wird vorbereitet…'); offTimer = setTimeout(function () { checkOffline(attempt + 1); }, 1500); }
-    else setPill(el2, 'warn', '⚠ Offline nicht bereit – mit Netz neu öffnen');
+    if (!$('#offl')) return;
+    if (hit && navigator.serviceWorker.controller) { setOffl('ok', 'Offline bereit'); return; }
+    if (attempt < 40) { setOffl('', 'Offline wird vorbereitet…'); offTimer = setTimeout(function () { checkOffline(attempt + 1); }, 1500); }
+    else setOffl('warn', 'Offline nicht bereit – mit Netz neu öffnen');
   }).catch(function (e) { logErr('checkOffline', e); });
 }
 
@@ -565,8 +689,8 @@ function checkOffline(attempt) {
 function chipsHTML(list, val, extraCls) {
   return list.map(function (v) { return '<button type="button" class="chip' + (extraCls || '') + (v === val ? ' on' : '') + '" data-v="' + esc(v) + '">' + esc(v) + '</button>'; }).join('');
 }
-function textInput(id, val, ph, extra) {
-  return '<input type="text" id="' + id + '" data-text="' + id + '" value="' + esc(val) + '" placeholder="' + esc(ph) + '" autocomplete="off" enterkeyhint="done" ' + (extra || '') + '>';
+function fieldRow(id, label, val, ph, extra) {
+  return '<label class="cell fld"><span class="k">' + label + '</span><input type="text" id="' + id + '" data-text="' + id + '" value="' + esc(val) + '" placeholder="' + esc(ph) + '" autocomplete="off" enterkeyhint="done" ' + (extra || '') + '></label>';
 }
 function recentValues(field) {
   return uniq(S.doors.slice().sort(function (a, b) { return String(b.updatedAt).localeCompare(String(a.updatedAt)); })
@@ -581,45 +705,43 @@ function renderDoor(id) {
   var schlChips = uniq(customSchl.concat(SCHLIESSER));
   var herstChips = uniq(recentValues('hersteller').filter(function (v) { return HERSTELLER.indexOf(v) < 0; }).slice(0, 2).concat(HERSTELLER));
   app.innerHTML =
-    '<header class="top"><button class="back" data-act="list">‹ Übersicht</button><div class="ttl" id="doorTitle">' + esc(kennung(d)) + '</div><div class="side" id="savedInd">✓ gespeichert</div></header>' +
-    '<main>' +
-      '<section class="card">' +
-        '<h3>Geschoss</h3>' +
-        '<div class="chips g5" data-field="geschoss">' + chipsHTML(GESCHOSSE, d.geschoss) +
-          '<button type="button" class="chip oth' + (isOther ? ' on' : '') + '" data-v="__other">Andere</button></div>' +
-        '<input type="text" id="gOther" class="' + (isOther ? '' : 'hidden') + '" value="' + (isOther ? esc(d.geschoss) : '') + '" placeholder="z. B. 2.UG, TG, Zwischengeschoss" autocomplete="off" enterkeyhint="done">' +
-        '<div class="nrrow"><span class="lbl">Nr.</span><button type="button" class="nrbtn" data-act="nr-">−</button>' +
-          '<input type="text" id="nr" inputmode="numeric" pattern="[0-9]*" value="' + d.nr + '" autocomplete="off" enterkeyhint="done">' +
-          '<button type="button" class="nrbtn" data-act="nr+">+</button></div>' +
-        '<div id="dupWarn" class="warn hidden"></div>' +
-      '</section>' +
-      '<section class="card">' +
-        '<label class="lbl" for="bereich">Bereich</label>' + textInput('bereich', d.bereich, 'z. B. Treppenhaus Nord') +
-        '<div class="chips sm" data-fill="bereich">' + chipsHTML(bereichChips, d.bereich) + '</div>' +
-        '<label class="lbl sp" for="raum">Raum</label>' + textInput('raum', d.raum, 'z. B. Flur → Heizung, Raum 0.12') +
-      '</section>' +
-      '<section class="card" id="photoSec"></section>' +
-      '<section class="card">' +
-        '<label class="lbl" for="schliesser">Schließer</label>' + textInput('schliesser', d.schliesser, 'Modell, z. B. GEZE TS 5000', 'autocorrect="off" autocapitalize="off" spellcheck="false"') +
-        '<div class="chips sm" data-fill="schliesser">' + chipsHTML(schlChips, d.schliesser) + '</div>' +
-        '<p class="hint">Nicht erkennbar? Leer lassen und Foto „Ganze Tür“ machen.</p>' +
-      '</section>' +
-      '<section class="card">' +
-        '<label class="lbl" for="bemerkung">Bemerkung</label>' +
-        '<textarea id="bemerkung" data-text="bemerkung" rows="3" placeholder="optional – Mikrofon der Tastatur zum Diktieren">' + esc(d.bemerkung) + '</textarea>' +
-      '</section>' +
-      '<details class="card" id="more"' + (S.moreOpen ? ' open' : '') + '><summary>Weitere Angaben <span class="cnt" id="moreCnt"></span></summary><div class="more">' +
-        '<span class="lbl sp">Anforderung</span><div class="chips sm" data-field="anforderung">' + chipsHTML(ANFORDERUNG, d.anforderung) + '</div>' +
-        '<span class="lbl sp">Flügel</span><div class="chips sm" data-field="fluegel">' + chipsHTML(FLUEGEL, d.fluegel) + '</div>' +
-        '<span class="lbl sp">Material</span><div class="chips sm" data-field="material">' + chipsHTML(MATERIAL, d.material) + '</div>' +
-        '<label class="lbl sp" for="hersteller">Hersteller</label>' + textInput('hersteller', d.hersteller, 'Hersteller') +
-        '<div class="chips sm" data-fill="hersteller">' + chipsHTML(herstChips, d.hersteller) + '</div>' +
-        '<span class="lbl sp">Feststellanlage</span><div class="chips sm" data-field="fsa">' + chipsHTML(FSA, d.fsa) + '</div>' +
-        '<label class="lbl sp" for="kundenNr">Türnummer des Kunden</label>' + textInput('kundenNr', d.kundenNr, 'falls an der Tür angeschrieben') +
-      '</div></details>' +
-      '<button type="button" class="btn dout" data-act="del-door">Diese Tür löschen</button>' +
+    navBar({ back: true, title: kennung(d), titleId: 'doorTitle', right: '<span class="saved" id="savedInd">' + ic('check') + 'Gespeichert</span>' }) +
+    '<main class="pg" style="padding-top:12px">' +
+      '<div class="sec"><div class="sh">Geschoss</div><div class="grp">' +
+        '<div class="cell blk"><div class="gg" data-field="geschoss">' + chipsHTML(GESCHOSSE, d.geschoss) +
+          '<button type="button" class="chip oth' + (isOther ? ' on' : '') + '" data-v="__other">Andere</button></div></div>' +
+        '<label class="cell fld' + (isOther ? '' : ' hidden') + '" id="gOtherRow"><span class="k">Geschoss</span><input type="text" id="gOther" value="' + (isOther ? esc(d.geschoss) : '') + '" placeholder="z. B. 2.UG, TG" autocomplete="off" enterkeyhint="done"></label>' +
+        '<div class="cell nrc"><span class="k">Nummer</span><div class="stepper"><button type="button" class="stp" data-act="nr-" aria-label="Nummer minus">−</button>' +
+          '<input type="text" id="nr" inputmode="numeric" pattern="[0-9]*" value="' + d.nr + '" autocomplete="off" enterkeyhint="done" aria-label="Nummer">' +
+          '<button type="button" class="stp" data-act="nr+" aria-label="Nummer plus">+</button></div></div>' +
+      '</div><div class="sf warnf hidden" id="dupWarn"></div></div>' +
+      '<div class="sec"><div class="sh">Lage</div><div class="grp">' +
+        fieldRow('bereich', 'Bereich', d.bereich, 'z. B. Treppenhaus Nord') +
+        '<div class="cell blk"><div class="chips" data-fill="bereich">' + chipsHTML(bereichChips, d.bereich) + '</div></div>' +
+        fieldRow('raum', 'Raum', d.raum, 'z. B. Flur → Heizung') +
+      '</div></div>' +
+      '<div class="sec" id="photoSec"></div>' +
+      '<div class="sec"><div class="sh">Schließer</div><div class="grp">' +
+        fieldRow('schliesser', 'Modell', d.schliesser, 'z. B. GEZE TS 5000', 'autocorrect="off" autocapitalize="off" spellcheck="false"') +
+        '<div class="cell blk"><div class="chips" data-fill="schliesser">' + chipsHTML(schlChips, d.schliesser) + '</div></div>' +
+      '</div><div class="sf">Nicht erkennbar? Leer lassen und Foto „Ganze Tür“ machen.</div></div>' +
+      '<div class="sec"><div class="sh">Bemerkung</div><div class="grp"><div class="cell blk">' +
+        '<textarea id="bemerkung" data-text="bemerkung" rows="3" placeholder="optional">' + esc(d.bemerkung) + '</textarea></div></div>' +
+        '<div class="sf">Tipp: Mikrofon auf der Tastatur zum Diktieren.</div></div>' +
+      '<div class="sec"><details class="grp" id="more"' + (S.moreOpen ? ' open' : '') + '>' +
+        '<summary class="cell ico">' + sq('ellipsis', 'var(--gray)') + '<span class="ct">Weitere Angaben</span><span class="cv" id="moreCnt"></span>' + ic('chev', 'chev') + '</summary>' +
+        '<div class="cell blk"><div class="mk">Anforderung</div><div class="chips" data-field="anforderung">' + chipsHTML(ANFORDERUNG, d.anforderung) + '</div></div>' +
+        '<div class="cell blk"><div class="mk">Flügel</div><div class="seg" data-field="fluegel">' + chipsHTML(FLUEGEL, d.fluegel) + '</div></div>' +
+        '<div class="cell blk"><div class="mk">Material</div><div class="chips" data-field="material">' + chipsHTML(MATERIAL, d.material) + '</div></div>' +
+        fieldRow('hersteller', 'Hersteller', d.hersteller, 'Hersteller') +
+        '<div class="cell blk"><div class="chips" data-fill="hersteller">' + chipsHTML(herstChips, d.hersteller) + '</div></div>' +
+        '<div class="cell blk"><div class="mk">Feststellanlage</div><div class="seg" data-field="fsa">' + chipsHTML(FSA, d.fsa) + '</div></div>' +
+        fieldRow('kundenNr', 'Kunden-Nr.', d.kundenNr, 'Nr. an der Tür') +
+      '</details></div>' +
+      '<div class="sec"><div class="grp"><button type="button" class="cell dest" data-act="del-door">Tür löschen</button></div></div>' +
     '</main>' +
-    '<footer class="bar"><button class="btn sec" data-act="list">Übersicht</button><button class="btn pri" data-act="next">Nächste Tür →</button></footer>';
+    '<div class="tbfade"></div><footer class="tb"><button type="button" class="cap glass" data-act="list">' + ic('list') + 'Übersicht</button>' +
+    '<button type="button" class="cap pri" data-act="next">Nächste Tür' + ic('next') + '</button></footer>';
   renderPhotoSection();
   updateKenn(d);
   updateMoreCnt(d);
@@ -629,35 +751,38 @@ function renderDoor(id) {
 function photoBlock(d, kind, title) {
   var ps = d.photos.filter(function (p) { return p.kind === kind; });
   var pend = pending[d.id + ':' + kind] || 0;
-  var h = '<div class="pblock"><div class="phead"><h3>Foto ' + title + '</h3>' + (ps.length ? '<span class="okb">✓ ' + ps.length + (ps.length === 1 ? ' Foto' : ' Fotos') + '</span>' : '') + '</div>';
+  var status = ps.length ? '<span class="cv okb">' + ic('check') + plural(ps.length, 'Foto', 'Fotos') + '</span>'
+    : (kind === 'typenschild' && d.keinTypenschild) ? '<span class="cv">nicht vorhanden</span>'
+    : kind === 'typenschild' ? '<span class="cv missv">fehlt</span>' : '<span class="cv">optional</span>';
+  var h = '<div class="grp pblock"><div class="cell ico ph">' + sq(kind === 'typenschild' ? 'tag' : 'door', kind === 'typenschild' ? 'var(--tint)' : 'var(--navy)') + '<span class="ct">' + title + '</span>' + status + '</div>';
+  h += '<div class="cell blk">';
   if (ps.length || pend) {
-    h += '<div class="thumbs">' + ps.map(function (p) { return '<button type="button" class="th" data-act="view-photo" data-id="' + esc(p.id) + '"><img data-thumb="' + esc(p.id) + '" alt=""></button>'; }).join('');
+    h += '<div class="thumbs">' + ps.map(function (p) { return '<button type="button" class="th" data-act="view-photo" data-id="' + esc(p.id) + '" aria-label="Foto ansehen"><img data-thumb="' + esc(p.id) + '" alt=""></button>'; }).join('');
     for (var i = 0; i < pend; i++) h += '<div class="th spin">speichert…</div>';
-    h += '<label for="camInput" class="th add" data-cam="' + kind + '" aria-label="weiteres Foto">＋</label></div>';
+    h += '<label for="camInput" class="th add" data-cam="' + kind + '" aria-label="weiteres Foto">' + ic('plus') + '</label></div>';
   } else {
-    h += '<label for="camInput" class="camBig" data-cam="' + kind + '"><span class="ic">📷</span> ' + title + ' fotografieren</label>';
+    h += '<label for="camInput" class="camBig" data-cam="' + kind + '">' + ic('camera') + title + ' fotografieren</label>';
   }
-  h += '<div class="prow"><label for="libInput" class="link" data-cam="' + kind + '">aus Fotos-App wählen</label>';
-  if (kind === 'typenschild') h += '<label class="chk"><input type="checkbox" data-chk="keinTS"' + (d.keinTypenschild ? ' checked' : '') + '> kein Typenschild / unlesbar</label>';
-  return h + '</div></div>';
+  h += '</div><label for="libInput" class="cell ico link" data-cam="' + kind + '"><span class="sq" style="background:transparent;color:var(--tint)">' + ic('photo') + '</span><span class="ct">Aus Fotos-App wählen</span></label>';
+  if (kind === 'typenschild') h += '<label class="cell tap"><span class="ct">Kein Typenschild / unlesbar</span><span class="swl"><input type="checkbox" data-chk="keinTS"' + (d.keinTypenschild ? ' checked' : '') + '><span class="sw"></span></span></label>';
+  return h + '</div>';
 }
 function renderPhotoSection() {
   var sec = $('#photoSec'); var d = findDoor(currentDoorId);
   if (!sec || !d) return;
-  sec.innerHTML = photoBlock(d, 'typenschild', 'Typenschild') + photoBlock(d, 'tuer', 'Ganze Tür');
+  sec.innerHTML = '<div class="sh">Fotos</div>' + photoBlock(d, 'typenschild', 'Typenschild') + photoBlock(d, 'tuer', 'Ganze Tür');
   hydrateThumbs(sec);
 }
 function updateKenn(d) {
   var k = kennung(d);
   var t = $('#doorTitle'); if (t) t.textContent = k;
-  var kk = $('#kenn'); if (kk) kk.textContent = k;
   var nr = $('#nr'); if (nr && document.activeElement !== nr) nr.value = d.nr;
   var w = $('#dupWarn');
-  if (w) { if (isDup(d)) { w.textContent = '⚠ ' + k + ' gibt es schon – bitte Nr. prüfen'; w.classList.remove('hidden'); } else w.classList.add('hidden'); }
+  if (w) { if (isDup(d)) { w.textContent = '⚠ ' + k + ' gibt es schon – bitte Nummer prüfen'; w.classList.remove('hidden'); } else w.classList.add('hidden'); }
 }
 function updateMoreCnt(d) {
   var n = MORE_FIELDS.filter(function (f) { return d[f] && String(d[f]).trim(); }).length;
-  var el = $('#moreCnt'); if (el) el.textContent = n ? '(' + n + ' ausgefüllt)' : '(optional)';
+  var el = $('#moreCnt'); if (el) el.textContent = n ? n + ' ausgefüllt' : 'optional';
 }
 function setGeschoss(d, g) {
   if (d.geschoss === g) return;
@@ -684,33 +809,37 @@ function zipCurrent() {
 function renderExport() {
   currentDoorId = null;
   var doors = S.doors, nPh = doors.reduce(function (s, d) { return s + d.photos.length; }, 0);
-  var miss = doors.filter(function (d) { return !hasTS(d) && !d.keinTypenschild; });
+  var missList = sortedDoors().filter(function (d) { return !hasTS(d) && !d.keinTypenschild; }).map(kennung);
   app.innerHTML =
-    '<header class="top"><button class="back" data-act="list">‹ Übersicht</button><div class="ttl">Export</div><div class="side"></div></header>' +
-    '<main>' +
-      '<div class="card"><div class="stats"><div><b>' + doors.length + '</b><span>Türen</span></div><div><b>' + nPh + '</b><span>Fotos</span></div><div class="' + (miss.length ? 'w' : '') + '"><b>' + miss.length + '</b><span>ohne Typenschild</span></div></div>' +
-        (miss.length ? '<p class="hint" style="color:var(--wa)">Ohne Typenschild-Foto: ' + esc(sortedDoors().filter(function (d) { return !hasTS(d) && !d.keinTypenschild; }).map(kennung).join(', ')) + '</p>' : '') +
-        (S.lastExport ? '<p class="hint">Letzter Export: ' + fmtDT(S.lastExport.at) + ' (' + S.lastExport.count + ' Türen)</p>' : '') + '</div>' +
-      '<div class="card"><h3>Alles mit Fotos (ZIP)</h3><div id="zipArea"></div></div>' +
-      '<div class="card"><h3>Nur Liste ohne Fotos</h3><p class="hint" style="margin:0 0 10px">Kleine Datei – geht auch bei schlechtem Netz.</p><button type="button" class="btn sec w" data-act="share-csv">Liste teilen (CSV)</button></div>' +
+    navBar({ back: true, title: 'Export' }) +
+    '<main class="pg" style="padding-top:12px">' +
+      '<div class="tiles"><div class="tile"><b>' + doors.length + '</b><span>Türen</span></div><div class="tile"><b>' + nPh + '</b><span>Fotos</span></div>' +
+        '<div class="tile' + (missList.length ? ' warn' : '') + '"><b>' + missList.length + '</b><span>ohne Typenschild</span></div></div>' +
+      '<div class="stat">' + (missList.length ? '<span class="warn">' + ic('warn') + 'Ohne Typenschild-Foto: ' + esc(missList.join(', ')) + '</span>' : '') +
+        '<span' + (S.lastExport ? ' class="ok"' : '') + '>' + ic('clock') + (S.lastExport ? 'Letzter Export ' + fmtDT(S.lastExport.at) + ' (' + plural(S.lastExport.count, 'Tür', 'Türen') + ')' : 'Noch kein Export') + '</span></div>' +
+      '<div class="sec"><div class="sh">Alles mit Fotos</div><div class="grp" id="zipArea"></div>' +
+        '<div class="sf">Am sichersten zuerst „In Dateien sichern“, danach nochmal teilen per WhatsApp oder Mail ans Büro.</div></div>' +
+      '<div class="sec"><div class="sh">Nur Liste</div><div class="grp">' +
+        '<button type="button" class="cell ico" data-act="share-csv">' + sq('doc', 'var(--green)') + '<span class="ct">Liste teilen (CSV, ohne Fotos)</span>' + ic('chev', 'chev') + '</button></div>' +
+        '<div class="sf">Kleine Datei – geht auch bei schlechtem Netz.</div></div>' +
     '</main>';
   refreshZipArea();
 }
 function refreshZipArea() {
   var el = $('#zipArea'); if (!el) return;
   if (zipState.building) {
-    el.innerHTML = '<p class="hint" style="margin:0" id="zipTxt">ZIP wird erstellt … bitte warten</p><progress id="zipProg" max="1" value="' + zipState.p + '"></progress>';
+    el.innerHTML = '<div class="cell blk"><div style="display:flex;align-items:center;gap:12px">' + sq('zip', 'var(--tint)') + '<span id="zipTxt">ZIP wird erstellt … bitte warten</span></div><div class="prog"><i id="zipProg" style="width:' + Math.round(zipState.p * 100) + '%"></i></div></div>';
     return;
   }
   if (lastZip && zipCurrent()) {
-    el.innerHTML = '<div class="zipok">✓ Fertig: ' + esc(lastZip.name) + ' (' + fmtMB(lastZip.blob.size) + ')' + (lastZip.missing ? '<br>⚠ ' + lastZip.missing + ' Foto(s) fehlten' : '') + '</div>' +
-      '<button type="button" class="btn ok w" data-act="share-zip">Teilen / Sichern …</button>' +
-      '<p class="hint">Am sichersten zuerst <b>„In Dateien sichern“</b>, danach nochmal teilen per WhatsApp oder Mail ans Büro.</p>' +
-      '<button type="button" class="btn sec w" data-act="dl-zip">Herunterladen (falls Teilen nicht geht)</button>';
+    el.innerHTML = '<div class="cell ico">' + sq('zip', 'var(--green)') + '<span class="ct" style="word-break:break-all;font-size:15px">' + esc(lastZip.name) + '</span><span class="cv">' + fmtMB(lastZip.blob.size) + '</span></div>' +
+      (lastZip.missing ? '<div class="cell ico note">' + sq('warn', 'var(--orange)') + '<span class="ct">' + plural(lastZip.missing, 'Foto fehlte', 'Fotos fehlten') + ' im Speicher</span></div>' : '') +
+      '<div class="cell blk"><button type="button" class="cap pri w" data-act="share-zip">' + ic('share') + 'Teilen / Sichern …</button>' +
+      '<button type="button" class="cap sec2 w" data-act="dl-zip">' + ic('download') + 'Herunterladen</button></div>';
     return;
   }
-  el.innerHTML = '<p class="hint" style="margin:0 0 10px">Liste + alle Fotos in einer Datei. Dauert je nach Menge ein paar Sekunden.</p>' +
-    '<button type="button" class="btn pri w" data-act="zip"' + (S.doors.length ? '' : ' disabled') + '>ZIP erstellen</button>';
+  el.innerHTML = '<div class="cell ico">' + sq('zip', 'var(--tint)') + '<span class="ct">Liste + alle Fotos in einer ZIP-Datei</span></div>' +
+    '<div class="cell blk"><button type="button" class="cap pri w" data-act="zip"' + (S.doors.length ? '' : ' disabled') + '>ZIP erstellen</button></div>';
 }
 
 /* ---- Exportdaten ---- */
@@ -765,8 +894,8 @@ function buildOverview(plan, okIds) {
     var opt = [d.anforderung, d.fluegel, d.material, d.hersteller, d.fsa ? 'FSA: ' + d.fsa : '', d.kundenNr ? 'Kd-Nr: ' + d.kundenNr : ''].filter(Boolean).map(esc).join(' · ');
     return '<tr><td><b>' + esc(e.base) + '</b></td><td>' + esc(d.bereich) + '</td><td>' + esc(d.raum) + '</td><td>' + esc(d.schliesser) + '</td><td>' + esc(d.bemerkung) + (opt ? '<br><small>' + opt + '</small>' : '') + (d.keinTypenschild ? '<br><small>kein Typenschild</small>' : '') + '</td><td class="i">' + imgs + '</td></tr>';
   }).join('');
-  return '<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Türaufnahme ' + esc(S.kunde) + '</title><style>body{font:14px/1.4 Segoe UI,Arial,sans-serif;margin:20px;color:#111}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccc;padding:6px 8px;vertical-align:top;text-align:left}th{background:#f0f2f5}td.i img{height:140px;margin:2px;border:1px solid #ddd}small{color:#555}</style></head><body>' +
-    '<h1>Türaufnahme – ' + esc(S.kunde) + '</h1><p>' + plan.length + ' Türen · exportiert ' + esc(fmtDT(nowISO())) + '</p>' +
+  return '<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Türaufnahme ' + esc(S.kunde) + '</title><style>body{font:14px/1.4 -apple-system,Segoe UI,Arial,sans-serif;margin:24px;color:#111}h1{margin:0 0 4px}table{border-collapse:collapse;width:100%;margin-top:16px}th,td{border:1px solid #d1d1d6;padding:6px 8px;vertical-align:top;text-align:left}th{background:#f2f2f7}td.i img{height:140px;margin:2px;border-radius:6px;border:1px solid #ddd}small{color:#555}</style></head><body>' +
+    '<h1>Türaufnahme – ' + esc(S.kunde) + '</h1><div>' + plan.length + ' Türen · exportiert ' + esc(fmtDT(nowISO())) + ' · E+S Brandschutz</div>' +
     '<table><thead><tr><th>Tür</th><th>Bereich</th><th>Raum</th><th>Schließer</th><th>Bemerkung / Weitere</th><th>Fotos</th></tr></thead><tbody>' + rows + '</tbody></table></body></html>';
 }
 
@@ -837,12 +966,12 @@ function buildZip(onProgress) {
 function buildZipUI() {
   if (zipState.building) return;
   zipState.building = true; zipState.p = 0; refreshZipArea();
-  buildZip(function (p) { zipState.p = p; var pr = $('#zipProg'); if (pr) pr.value = p; }).then(function (z) {
+  buildZip(function (p) { zipState.p = p; var pr = $('#zipProg'); if (pr) pr.style.width = Math.round(p * 100) + '%'; }).then(function (z) {
     lastZip = z;
-    toast(z.missing ? '⚠ ZIP fertig, aber ' + z.missing + ' Foto(s) fehlten' : '✓ ZIP fertig', z.missing ? 'err' : '', 4000);
+    toast(z.missing ? 'ZIP fertig, aber ' + z.missing + ' Foto(s) fehlten' : '✓ ZIP fertig', z.missing ? 'err' : '', 3000);
   }, function (e) {
     logErr('zip', e); lastZip = null;
-    toast('⚠ ZIP fehlgeschlagen: ' + errMsg(e), 'err', 7000);
+    toast('ZIP fehlgeschlagen: ' + errMsg(e), 'err', 7000);
   }).then(function () { zipState.building = false; refreshZipArea(); });
 }
 function markExported(z) { S.lastExport = { at: z.builtAt, count: z.nDoors }; saveState(); if ($('#zipArea')) renderExport(); }
@@ -878,14 +1007,15 @@ function viewPhoto(id) {
   S.doors.forEach(function (x) { x.photos.forEach(function (p) { if (p.id === id) { d = x; kind = p.kind; } }); });
   if (d) { var same = d.photos.filter(function (p) { return p.kind === kind; }); tot = same.length; same.forEach(function (p, i) { if (p.id === id) idx = i + 1; }); }
   getRec('photos', id).then(function (rec) {
-    if (!rec || !rec.data) { toast('⚠ Foto nicht gefunden', 'err'); return; }
+    if (!rec || !rec.data) { toast('Foto nicht gefunden', 'err'); return; }
     closeOv();
     ovURL = URL.createObjectURL(new Blob([rec.data], { type: rec.mime || 'image/jpeg' }));
-    ov.innerHTML = '<div class="ovt">' + esc((d ? kennung(d) + ' · ' : '') + (kind === 'typenschild' ? 'Typenschild' : 'Ganze Tür') + ' ' + idx + '/' + tot) + ' · Tippen = Zoom</div>' +
+    ov.innerHTML = '<div class="ovt"><button type="button" class="gbtn circ dark" data-ov="close" aria-label="Schließen">' + ic('xmark') + '</button>' +
+      '<div class="ovtitle">' + esc((d ? kennung(d) + ' · ' : '') + (kind === 'typenschild' ? 'Typenschild' : 'Ganze Tür') + ' ' + idx + ' von ' + tot) + '</div><span class="spacer"></span></div>' +
       '<div class="sc" id="ovSc"><img src="' + ovURL + '" alt=""></div>' +
-      '<div class="ovb"><button type="button" class="btn sec" data-ov="close">Schließen</button><button type="button" class="btn danger" data-ov="del" data-id="' + esc(id) + '">Foto löschen</button></div>';
+      '<div class="ovb"><span>Tippen zum Zoomen</span><button type="button" class="gbtn circ dark red" data-ov="del" data-id="' + esc(id) + '" aria-label="Foto löschen">' + ic('trash') + '</button></div>';
     ov.classList.remove('hidden');
-  }).catch(function (e) { logErr('viewPhoto', e); toast('⚠ Foto konnte nicht geöffnet werden', 'err'); });
+  }).catch(function (e) { logErr('viewPhoto', e); toast('Foto konnte nicht geöffnet werden', 'err'); });
 }
 ov.addEventListener('click', function (e) {
   var b = e.target.closest('[data-ov]');
@@ -914,7 +1044,7 @@ function deletePhoto(id) {
     });
     saveState(); revokeThumb(id); closeOv(); renderPhotoSection();
     toast('Foto gelöscht');
-  }, function (e) { logErr('deletePhoto', e); toast('⚠ Löschen fehlgeschlagen: ' + errMsg(e), 'err'); });
+  }, function (e) { logErr('deletePhoto', e); toast('Löschen fehlgeschlagen: ' + errMsg(e), 'err'); });
 }
 
 /* ================= Aktionen ================= */
@@ -953,7 +1083,7 @@ var ACT = {
   },
   'start': function () {
     var v = ($('#kunde').value || '').trim();
-    if (!v) { toast('Bitte Kunde / Objekt eintragen', 'err'); $('#kunde').focus(); return; }
+    if (!v) { toast('Bitte Kunde eintragen', 'err'); $('#kunde').focus(); return; }
     S.kunde = v; if (!S.createdAt) S.createdAt = nowISO(); saveState(); requestPersist(); go('list');
   },
   'dismiss-hint': function () { S.hintDismissed = true; saveState(); renderList(); },
@@ -976,7 +1106,7 @@ var ACT = {
 app.addEventListener('click', function (e) {
   var cam = e.target.closest('[data-cam]');
   if (cam) {
-    if (dbFailed) { e.preventDefault(); toast('⚠ Fotospeicher geht nicht – bitte Papier', 'err', 5000); return; }
+    if (dbFailed) { e.preventDefault(); toast('Fotospeicher geht nicht – bitte Papier', 'err', 5000); return; }
     pendingCam = { doorId: currentDoorId, kind: cam.getAttribute('data-cam') };
     return; // Standardverhalten: Label öffnet Kamera
   }
@@ -990,13 +1120,13 @@ function onChip(chip) {
   if (!d) return;
   var field = box.getAttribute('data-field'), fill = box.getAttribute('data-fill');
   if (field === 'geschoss') {
-    var other = $('#gOther');
+    var row = $('#gOtherRow'), other = $('#gOther');
     if (v === '__other') {
-      markChips(box, '__other'); other.classList.remove('hidden'); other.focus();
+      markChips(box, '__other'); row.classList.remove('hidden'); other.focus();
       if (other.value.trim()) setGeschoss(d, other.value.trim());
       return;
     }
-    other.classList.add('hidden'); other.value = '';
+    row.classList.add('hidden'); other.value = '';
     markChips(box, v); setGeschoss(d, v);
     return;
   }
@@ -1031,7 +1161,11 @@ app.addEventListener('input', function (e) {
 app.addEventListener('change', function (e) {
   var t = e.target, d = findDoor(currentDoorId);
   if (!d) return;
-  if (t.getAttribute('data-chk') === 'keinTS') { d.keinTypenschild = t.checked; touch(d); saveState(); }
+  if (t.getAttribute('data-chk') === 'keinTS') {
+    d.keinTypenschild = t.checked; touch(d); saveState();
+    var st = $('#photoSec .pblock .ph .cv');
+    if (st && !hasTS(d)) { st.className = 'cv' + (d.keinTypenschild ? '' : ' missv'); st.textContent = d.keinTypenschild ? 'nicht vorhanden' : 'fehlt'; }
+  }
   if (t.id === 'nr') t.value = d.nr;
 });
 app.addEventListener('keydown', function (e) {
