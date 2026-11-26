@@ -1,0 +1,1068 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Türaufnahme">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-180.png">
+<title>Türaufnahme</title>
+<style>
+:root{--bg:#eef0f3;--card:#fff;--tx:#14181f;--mu:#5d6675;--li:#d5dae1;--pri:#0b5cd5;--ok:#13803b;--okbg:#e3f4e8;--wa:#a84a00;--wabg:#fff1dc;--da:#c4161c;--dabg:#fdecec}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%}
+button,input,textarea{font:inherit;color:inherit}
+button,label,summary{touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none}
+.hidden{display:none!important}
+.vh{position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0}
+
+header.top{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--li);display:flex;align-items:center;gap:6px;padding:6px 10px;padding-top:calc(6px + env(safe-area-inset-top));min-height:56px}
+.top .ttl{flex:1;font-weight:800;font-size:20px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .ttl.left{text-align:left;padding-left:4px}
+.top .back{background:none;border:0;color:var(--pri);font-size:17px;font-weight:600;padding:10px 2px;width:100px;flex:none;text-align:left}
+.top .side{width:100px;flex:none;text-align:right;font-size:13px;color:var(--mu)}
+.top .side.flash{color:var(--ok);font-weight:700}
+.top .hbtn{background:var(--pri);color:#fff;border:0;border-radius:10px;font-weight:700;padding:10px 16px;font-size:16px}
+
+main{padding:12px 12px calc(110px + env(safe-area-inset-bottom));max-width:720px;margin:0 auto}
+.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 2px rgba(0,0,0,.07)}
+h3,.lbl{display:block;margin:0 0 8px;font-size:14px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.04em}
+.lbl.sp{margin-top:16px}
+input[type=text],textarea{width:100%;font-size:18px;padding:12px 14px;border:1.5px solid var(--li);border-radius:10px;background:#fff;-webkit-appearance:none;appearance:none;margin:0}
+textarea{resize:vertical;min-height:84px}
+input:focus,textarea:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 3px rgba(11,92,213,.15)}
+.hint{color:var(--mu);font-size:14px;margin:8px 0 0}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chips.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:0}
+.chip{min-height:46px;padding:0 14px;border:1.5px solid #c3c9d2;border-radius:12px;background:#fff;font-weight:650;font-size:16px;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.1}
+.g5 .chip{padding:0 2px;font-size:16px}
+.g5 .chip.oth{font-size:14px}
+.chips.sm .chip{min-height:40px;font-size:15px;font-weight:500;padding:0 12px;border-radius:20px}
+.chip.on{background:var(--pri);border-color:var(--pri);color:#fff}
+#gOther{margin-top:10px}
+
+.nrrow{display:flex;align-items:center;gap:10px;margin-top:14px}
+.nrrow .lbl{margin:0;width:34px}
+.nrbtn{width:54px;height:54px;border-radius:12px;border:1.5px solid #c3c9d2;background:#fff;font-size:30px;font-weight:600;line-height:1;padding:0}
+#nr{width:84px!important;text-align:center;font-size:24px!important;font-weight:800;padding:10px 4px!important}
+.kenn{flex:1;min-width:0;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:800;font-size:21px;color:var(--pri)}
+.warn{margin-top:10px;background:var(--wabg);color:var(--wa);border-radius:10px;padding:10px 12px;font-weight:600;font-size:15px}
+
+.pblock+.pblock{margin-top:16px;padding-top:14px;border-top:1px solid var(--li)}
+.phead{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.phead h3{margin:0}
+.okb{color:var(--ok);font-weight:800;font-size:15px}
+.camBig{display:flex;align-items:center;justify-content:center;gap:10px;min-height:92px;border:2px dashed var(--pri);border-radius:12px;color:var(--pri);font-weight:800;font-size:18px;background:#f2f6fe;text-align:center;padding:8px}
+.camBig .ic{font-size:28px}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px}
+.th{width:92px;height:92px;border-radius:10px;overflow:hidden;border:1px solid var(--li);padding:0;background:#eceff3;display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--mu)}
+.th img{width:100%;height:100%;object-fit:cover;display:block}
+.th.add{border:2px dashed var(--pri);color:var(--pri);font-size:36px;background:#f2f6fe;font-weight:400}
+.th.spin{font-size:14px;font-weight:700;color:var(--pri);animation:pulse 1s infinite alternate}
+@keyframes pulse{from{opacity:.4}to{opacity:1}}
+.prow{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;margin-top:10px}
+.link{color:var(--pri);font-size:15px;text-decoration:underline;padding:6px 0}
+.chk{display:flex;align-items:center;gap:8px;font-size:15px;padding:4px 0}
+.chk input{width:24px;height:24px;margin:0;accent-color:var(--pri)}
+
+details.card>summary{list-style:none;font-weight:800;font-size:17px;display:flex;align-items:center;gap:8px;min-height:32px}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary::before{content:"▸";font-size:18px;color:var(--pri);width:16px}
+details.card[open]>summary::before{content:"▾"}
+details.card>summary .cnt{color:var(--mu);font-weight:500;font-size:15px}
+.more{margin-top:6px}
+
+footer.bar{position:fixed;left:0;right:0;bottom:0;z-index:10;background:rgba(255,255,255,.97);border-top:1px solid var(--li);display:flex;gap:10px;padding:10px 12px calc(10px + env(safe-area-inset-bottom))}
+.btn{flex:1;min-height:54px;border-radius:12px;border:0;font-weight:750;font-size:17px;padding:0 14px;display:flex;align-items:center;justify-content:center;gap:8px;text-align:center}
+.btn.pri{background:var(--pri);color:#fff}
+.btn.sec{background:#e4e8ee;color:var(--tx)}
+.btn.ok{background:var(--ok);color:#fff}
+.btn.danger{background:var(--da);color:#fff}
+.btn.dout{background:#fff;border:1.5px solid var(--da);color:var(--da);width:100%;margin-top:6px;flex:none}
+.btn.w{width:100%;flex:none}
+.btn+.btn.w{margin-top:10px}
+.btn:disabled{opacity:.5}
+.bar .btn.pri{flex:1.7}
+
+.kunde{display:flex;align-items:baseline;gap:10px;width:100%;background:none;border:0;padding:0;text-align:left}
+.kunde .lbl{margin:0}
+.kunde .kv{flex:1;font-size:19px;font-weight:800;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kunde .ed{color:var(--pri);font-size:15px}
+.stats{display:flex;gap:8px;margin-top:12px}
+.stats>div{flex:1;background:#f4f6f8;border-radius:10px;padding:8px 6px;text-align:center}
+.stats b{display:block;font-size:26px;font-weight:800;line-height:1.1}
+.stats span{font-size:13px;color:var(--mu)}
+.stats .w{background:var(--wabg)}.stats .w b,.stats .w span{color:var(--wa)}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.pill{display:inline-block;font-size:13px;font-weight:650;padding:5px 10px;border-radius:20px;background:#eceff3;color:var(--mu)}
+.pill.ok{background:var(--okbg);color:var(--ok)}
+.pill.warn{background:var(--wabg);color:var(--wa)}
+.pill.err{background:var(--dabg);color:var(--da)}
+
+.banner{border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:15px}
+.banner.info{background:#e6efff;color:#0a3a86}
+.banner.warn{background:var(--wabg);color:#6e3200}
+.banner.err{background:var(--dabg);color:#7d0d10}
+.banner .bb{margin-top:10px;display:block;width:100%;min-height:44px;border:0;border-radius:10px;font-weight:700;font-size:16px;background:rgba(0,0,0,.08);color:inherit}
+
+.grp h2{font-size:14px;color:var(--mu);margin:18px 4px 8px;text-transform:uppercase;letter-spacing:.05em;font-weight:800}
+.row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:0;border-radius:12px;padding:10px 12px;margin-bottom:8px;box-shadow:0 1px 2px rgba(0,0,0,.07);min-height:72px}
+.row .kn{font-weight:800;font-size:18px;min-width:74px}
+.row .kn .dup{color:var(--wa)}
+.row .info{flex:1;min-width:0}
+.row .info b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .info small{display:block;color:var(--mu);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:1em}
+.row .st{width:54px;height:54px;border-radius:8px;overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1.15;text-align:center;font-weight:700;background:#eceff3}
+.st img{width:100%;height:100%;object-fit:cover}
+.st.miss{background:var(--wabg);color:var(--wa)}
+.st.none{color:var(--mu)}
+.empty{text-align:center;color:var(--mu);padding:40px 10px;font-size:17px}
+.ver{text-align:center;color:#9aa2ad;font-size:12px;margin-top:24px}
+
+.setup{padding-top:calc(40px + env(safe-area-inset-top))}
+.setup h1{font-size:30px;margin:0 0 6px}
+.setup p{color:var(--mu);margin:0 0 22px}
+.setup .btn{margin-top:18px}
+
+progress{width:100%;height:14px;margin-top:6px}
+.zipok{background:var(--okbg);color:var(--ok);border-radius:10px;padding:10px 12px;font-weight:650;margin-bottom:10px;font-size:15px;word-break:break-all}
+
+#ov{position:fixed;inset:0;z-index:50;background:#000;display:flex;flex-direction:column}
+#ov .ovt{color:#ddd;padding:calc(10px + env(safe-area-inset-top)) 14px 8px;font-size:15px;text-align:center}
+#ov .sc{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;display:flex;align-items:center;justify-content:center}
+#ov .sc img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+#ov .sc.zoom{display:block}
+#ov .sc.zoom img{max-width:none;max-height:none;width:300%}
+#ov .ovb{display:flex;gap:10px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#111}
+
+#toast{position:fixed;left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:60;display:flex;justify-content:center;pointer-events:none}
+#toast div{background:#1f2937;color:#fff;padding:12px 16px;border-radius:12px;font-size:16px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.25);max-width:560px;text-align:center}
+#toast div.err{background:var(--da)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="ov" class="hidden"></div>
+<div id="toast"></div>
+<input type="file" id="camInput" class="vh" accept="image/*" capture="environment" tabindex="-1" aria-hidden="true">
+<input type="file" id="libInput" class="vh" accept="image/*" multiple tabindex="-1" aria-hidden="true">
+<script>
+(function () {
+'use strict';
+
+/* ================= Konfiguration ================= */
+var VERSION = '1.0 · 26.11.2026';
+var KEY = 'tueraufnahme.v1';
+var VIEWKEY = 'tueraufnahme.view';
+var LOGKEY = 'tueraufnahme.log';
+
+var GESCHOSSE = ['UG', 'EG', '1.OG', '2.OG', '3.OG', '4.OG', '5.OG', '6.OG', 'DG'];
+var SCHLIESSER = ['GEZE TS 5000', 'GEZE TS 4000', 'GEZE TS 3000', 'dormakaba TS 93', 'dormakaba TS 92', 'dormakaba TS 83', 'ECO TS 61', 'ECO TS 41', 'ASSA ABLOY DC 700', 'kein Schließer'];
+var ANFORDERUNG = ['T30', 'T30-RS', 'T60', 'T90', 'T90-RS', 'RS', 'keine'];
+var FLUEGEL = ['1-flügelig', '2-flügelig'];
+var MATERIAL = ['Stahl', 'Alu/Glas', 'Stahl/Glas', 'Holz', 'Sonstiges'];
+var HERSTELLER = ['Hörmann', 'Teckentrup', 'Novoferm', 'Schörghuber', 'Schüco', 'Jansen', 'unbekannt'];
+var FSA = ['ja', 'nein'];
+var BEREICH_DEFAULT = ['Treppenhaus', 'Flur', 'Kellerflur', 'Technikraum', 'Heizungsraum', 'Tiefgarage'];
+var MORE_FIELDS = ['anforderung', 'fluegel', 'material', 'hersteller', 'fsa', 'kundenNr'];
+var PHOTO_MAX = { typenschild: 2560, tuer: 2048 };
+
+/* ================= Helfer ================= */
+function $(s, r) { return (r || document).querySelector(s); }
+var app = $('#app'), ov = $('#ov'), toastEl = $('#toast');
+var camInput = $('#camInput'), libInput = $('#libInput');
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function nowISO() { return new Date().toISOString(); }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+function pad2(n) { n = String(n); return n.length < 2 ? '0' + n : n; }
+function kennung(d) { return (d.geschoss || '?') + '-' + pad2(d.nr || 0); }
+function fmtDT(iso) { var d = new Date(iso); return pad2(d.getDate()) + '.' + pad2(d.getMonth() + 1) + '.' + d.getFullYear() + ' ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes()); }
+function fmtT(iso) { var d = new Date(iso); return pad2(d.getHours()) + ':' + pad2(d.getMinutes()); }
+function errMsg(e) { if (!e) return 'unbekannt'; if (e.name === 'QuotaExceededError') return 'Speicher voll – bitte exportieren'; return e.message || e.name || String(e); }
+function fmtMB(bytes) { return (bytes / 1048576).toFixed(bytes > 10485760 ? 0 : 1).replace('.', ',') + ' MB'; }
+function uniq(arr) { var s = {}, out = []; arr.forEach(function (v) { var k = String(v).toLowerCase(); if (v && !s[k]) { s[k] = 1; out.push(v); } }); return out; }
+
+function logErr(where, e) {
+  var msg = nowISO() + ' [' + where + '] ' + (e && e.name ? e.name + ': ' : '') + (e && e.message ? e.message : String(e));
+  try { console.error(msg, e); } catch (x) {}
+  try { var l = JSON.parse(localStorage.getItem(LOGKEY) || '[]'); l.push(msg); localStorage.setItem(LOGKEY, JSON.stringify(l.slice(-150))); } catch (x) {}
+}
+window.addEventListener('error', function (e) { logErr('window', e.error || e.message); toast('⚠ Fehler: ' + (e.message || '') + ' – Daten sind gespeichert.', 'err', 5000); });
+window.addEventListener('unhandledrejection', function (e) { logErr('promise', e.reason); toast('⚠ Fehler: ' + errMsg(e.reason), 'err', 5000); });
+
+var toastTimer = null;
+function toast(msg, kind, ms) {
+  toastEl.innerHTML = '<div class="' + (kind || '') + '">' + esc(msg) + '</div>';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { toastEl.innerHTML = ''; }, ms || 2200);
+}
+
+function isStandalone() {
+  try { return window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches; } catch (e) { return false; }
+}
+function blobToAB(b) {
+  if (b.arrayBuffer) return b.arrayBuffer();
+  return new Promise(function (res, rej) { var r = new FileReader(); r.onload = function () { res(r.result); }; r.onerror = function () { rej(r.error); }; r.readAsArrayBuffer(b); });
+}
+
+/* ================= Zustand (Texte in localStorage) ================= */
+function emptyState() { return { kunde: '', createdAt: nowISO(), doors: [], lastExport: null, hintDismissed: false, moreOpen: false }; }
+function loadState() {
+  var raw = null;
+  try { raw = localStorage.getItem(KEY); } catch (e) { logErr('loadState', e); }
+  if (!raw) return emptyState();
+  try {
+    var s = JSON.parse(raw), base = emptyState();
+    for (var k in s) base[k] = s[k];
+    if (!Array.isArray(base.doors)) base.doors = [];
+    base.doors.forEach(function (d) { if (!Array.isArray(d.photos)) d.photos = []; });
+    return base;
+  } catch (e) {
+    logErr('loadState-parse', e);
+    try { localStorage.setItem(KEY + '.defekt.' + Date.now(), raw); } catch (x) {}
+    return emptyState();
+  }
+}
+var S = loadState();
+var savedTimer = null;
+function saveState() {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(S));
+    var el = $('#savedInd');
+    if (el) { el.textContent = '✓ gespeichert'; el.classList.add('flash'); clearTimeout(savedTimer); savedTimer = setTimeout(function () { el.classList.remove('flash'); }, 900); }
+    return true;
+  } catch (e) {
+    logErr('saveState', e);
+    toast('⚠ SPEICHERN FEHLGESCHLAGEN – bitte exportieren bzw. auf Papier weiter', 'err', 8000);
+    return false;
+  }
+}
+function findDoor(id) { for (var i = 0; i < S.doors.length; i++) if (S.doors[i].id === id) return S.doors[i]; return null; }
+function touch(d) { d.updatedAt = nowISO(); d.touched = true; }
+function hasTS(d) { return d.photos.some(function (p) { return p.kind === 'typenschild'; }); }
+function nextNr(g, exceptId) {
+  var m = 0;
+  S.doors.forEach(function (d) { if (d.id !== exceptId && d.geschoss === g && d.nr > m) m = d.nr; });
+  return m + 1;
+}
+function isDup(d) { return S.doors.some(function (x) { return x.id !== d.id && x.geschoss === d.geschoss && x.nr === d.nr; }); }
+function gRank(g) {
+  g = String(g || '').toUpperCase().replace(/\s+/g, '');
+  if (g === 'EG') return 0;
+  if (g === 'DG') return 100;
+  if (g === 'UG' || g === 'KG') return -1;
+  var m = g.match(/^(\d+)\.?OG$/); if (m) return +m[1];
+  m = g.match(/^(\d+)\.?(UG|KG)$/); if (m) return -(+m[1]);
+  if (g === 'TG') return -20;
+  return 200;
+}
+function sortedDoors() {
+  return S.doors.slice().sort(function (a, b) {
+    return (gRank(a.geschoss) - gRank(b.geschoss)) || String(a.geschoss).localeCompare(String(b.geschoss)) || (a.nr - b.nr) || String(a.createdAt).localeCompare(String(b.createdAt));
+  });
+}
+function newDoor(g) {
+  if (!g) {
+    var last = null;
+    S.doors.forEach(function (d) { if (!last || d.createdAt > last.createdAt) last = d; });
+    g = last ? last.geschoss : 'EG';
+  }
+  var t = nowISO();
+  var d = { id: uid(), createdAt: t, updatedAt: t, touched: false, geschoss: g, nr: nextNr(g), nrManual: false,
+    bereich: '', raum: '', schliesser: '', bemerkung: '', anforderung: '', fluegel: '', material: '', hersteller: '', fsa: '', kundenNr: '',
+    keinTypenschild: false, photos: [] };
+  S.doors.push(d);
+  saveState();
+  requestPersist();
+  return d;
+}
+function requestPersist() { try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function () {}); } catch (e) {} }
+
+/* ================= Fotos (IndexedDB) ================= */
+var dbp = null, dbFailed = null;
+function db() {
+  if (dbp) return dbp;
+  dbp = new Promise(function (res, rej) {
+    if (!window.indexedDB) { rej(new Error('IndexedDB nicht verfügbar')); return; }
+    var r;
+    try { r = indexedDB.open('tueraufnahme', 1); } catch (e) { rej(e); return; }
+    r.onupgradeneeded = function () {
+      var d = r.result;
+      if (!d.objectStoreNames.contains('meta')) d.createObjectStore('meta', { keyPath: 'id' });
+      if (!d.objectStoreNames.contains('photos')) d.createObjectStore('photos', { keyPath: 'id' });
+      if (!d.objectStoreNames.contains('thumbs')) d.createObjectStore('thumbs', { keyPath: 'id' });
+    };
+    r.onsuccess = function () { var d = r.result; d.onversionchange = function () { d.close(); }; res(d); };
+    r.onerror = function () { rej(r.error || new Error('Datenbank-Fehler')); };
+  });
+  dbp.catch(function () { dbp = null; });
+  return dbp;
+}
+function tx(stores, mode, fn) {
+  return db().then(function (d) {
+    return new Promise(function (res, rej) {
+      var t = d.transaction(stores, mode), out = {};
+      t.oncomplete = function () { res(out.v); };
+      t.onerror = function () { rej(t.error || new Error('Transaktion fehlgeschlagen')); };
+      t.onabort = function () { rej(t.error || new Error('Transaktion abgebrochen')); };
+      try { fn(t, out); } catch (e) { try { t.abort(); } catch (x) {} rej(e); }
+    });
+  });
+}
+function putPhoto(meta, data, thumb) {
+  return tx(['meta', 'photos', 'thumbs'], 'readwrite', function (t) {
+    t.objectStore('meta').put(meta);
+    t.objectStore('photos').put({ id: meta.id, mime: meta.mime, data: data });
+    if (thumb) t.objectStore('thumbs').put({ id: meta.id, mime: 'image/jpeg', data: thumb });
+  });
+}
+function getRec(store, id) { return tx([store], 'readonly', function (t, out) { var r = t.objectStore(store).get(id); r.onsuccess = function () { out.v = r.result; }; }); }
+function getAllMeta() { return tx(['meta'], 'readonly', function (t, out) { var r = t.objectStore('meta').getAll(); r.onsuccess = function () { out.v = r.result || []; }; }); }
+function delPhotos(ids) {
+  if (!ids.length) return Promise.resolve();
+  return tx(['meta', 'photos', 'thumbs'], 'readwrite', function (t) {
+    ids.forEach(function (id) { t.objectStore('meta').delete(id); t.objectStore('photos').delete(id); t.objectStore('thumbs').delete(id); });
+  });
+}
+
+var thumbURLs = {};
+function getThumbURL(id) {
+  if (thumbURLs[id]) return Promise.resolve(thumbURLs[id]);
+  return getRec('thumbs', id).then(function (rec) {
+    if (!rec || !rec.data) return null;
+    var u = URL.createObjectURL(new Blob([rec.data], { type: rec.mime || 'image/jpeg' }));
+    thumbURLs[id] = u; return u;
+  });
+}
+function revokeThumb(id) { if (thumbURLs[id]) { URL.revokeObjectURL(thumbURLs[id]); delete thumbURLs[id]; } }
+function hydrateThumbs(root) {
+  var imgs = root.querySelectorAll('img[data-thumb]');
+  Array.prototype.forEach.call(imgs, function (img) {
+    getThumbURL(img.getAttribute('data-thumb')).then(function (u) {
+      if (u) img.src = u; else { var s = document.createElement('span'); s.textContent = '📷'; img.replaceWith(s); }
+    }).catch(function (e) { logErr('thumb', e); });
+  });
+}
+
+function loadImg(url) {
+  return new Promise(function (res, rej) {
+    var im = new Image();
+    im.onload = function () { res(im); };
+    im.onerror = function () { rej(new Error('Bild konnte nicht gelesen werden')); };
+    im.src = url;
+  });
+}
+function resizeToJpeg(img, maxEdge, q) {
+  var w = img.naturalWidth, h = img.naturalHeight;
+  if (!w || !h) return Promise.reject(new Error('Bild ohne Größe'));
+  var sc = Math.min(1, maxEdge / Math.max(w, h));
+  var cw = Math.max(1, Math.round(w * sc)), ch = Math.max(1, Math.round(h * sc));
+  var c = document.createElement('canvas'); c.width = cw; c.height = ch;
+  var ctx = c.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cw, ch);
+  ctx.drawImage(img, 0, 0, cw, ch);
+  return new Promise(function (res, rej) {
+    c.toBlob(function (b) {
+      c.width = 0; c.height = 0;
+      if (b && b.size > 0) res({ blob: b, w: cw, h: ch }); else rej(new Error('JPEG-Erzeugung fehlgeschlagen'));
+    }, 'image/jpeg', q);
+  });
+}
+function processPhoto(file, kind) {
+  var url = URL.createObjectURL(file);
+  var img = null;
+  return loadImg(url).then(function (im) {
+    img = im;
+    return resizeToJpeg(img, PHOTO_MAX[kind] || 2048, 0.88).catch(function (e) { logErr('resize', e); return null; });
+  }).then(function (main) {
+    return resizeToJpeg(img, 360, 0.72).catch(function (e) { logErr('thumb', e); return null; }).then(function (th) {
+      var dataP = main ? blobToAB(main.blob) : blobToAB(file);
+      var thP = th ? blobToAB(th.blob) : Promise.resolve(null);
+      return Promise.all([dataP, thP]).then(function (r) {
+        return { data: r[0], thumb: r[1], mime: main ? 'image/jpeg' : (file.type || 'image/jpeg'), w: main ? main.w : img.naturalWidth, h: main ? main.h : img.naturalHeight, resized: !!main };
+      });
+    });
+  }, function (e) {
+    logErr('decode', e);
+    return blobToAB(file).then(function (ab) { return { data: ab, thumb: null, mime: file.type || 'image/jpeg', w: 0, h: 0, resized: false }; });
+  }).then(function (r) { URL.revokeObjectURL(url); return r; }, function (e) { URL.revokeObjectURL(url); throw e; });
+}
+
+var pending = {};          // "doorId:kind" -> Anzahl laufender Fotos
+var pendingCam = null;     // {doorId, kind}
+function addPhotos(files, doorId, kind) {
+  var chain = Promise.resolve();
+  files.forEach(function (f) {
+    var key = doorId + ':' + kind;
+    pending[key] = (pending[key] || 0) + 1;
+    if (currentDoorId === doorId) renderPhotoSection();
+    chain = chain.then(function () {
+      return processPhoto(f, kind).then(function (p) {
+        var id = uid();
+        var meta = { id: id, doorId: doorId, kind: kind, mime: p.mime, w: p.w, h: p.h, size: p.data.byteLength, createdAt: nowISO() };
+        return putPhoto(meta, p.data, p.thumb).then(function () {
+          var d = findDoor(doorId);
+          if (d) { d.photos.push({ id: id, kind: kind }); if (kind === 'typenschild') d.keinTypenschild = false; touch(d); saveState(); }
+          toast('✓ Foto gespeichert');
+        });
+      }).catch(function (e) {
+        logErr('addPhoto', e);
+        toast('⚠ Foto NICHT gespeichert: ' + errMsg(e) + ' – bitte nochmal', 'err', 7000);
+      }).then(function () {
+        pending[key]--;
+        if (currentDoorId === doorId) renderPhotoSection();
+      });
+    });
+  });
+  return chain;
+}
+function onFiles(input) {
+  var files = Array.prototype.slice.call(input.files || []);
+  var pc = pendingCam; pendingCam = null;
+  try { input.value = ''; } catch (e) {}
+  if (!files.length || !pc || !findDoor(pc.doorId)) return;
+  addPhotos(files, pc.doorId, pc.kind);
+}
+camInput.addEventListener('change', function () { onFiles(camInput); });
+libInput.addEventListener('change', function () { onFiles(libInput); });
+
+function reconcile() {
+  return getAllMeta().then(function (metas) {
+    var byId = {}; metas.forEach(function (m) { byId[m.id] = m; });
+    var changed = false, lost = 0, ref = {};
+    S.doors.forEach(function (d) {
+      var before = d.photos.length;
+      d.photos = d.photos.filter(function (p) { return !!byId[p.id]; });
+      if (d.photos.length !== before) { lost += before - d.photos.length; changed = true; }
+      d.photos.forEach(function (p) { ref[p.id] = 1; });
+    });
+    metas.forEach(function (m) {
+      if (ref[m.id]) return;
+      var d = findDoor(m.doorId);
+      if (d) { d.photos.push({ id: m.id, kind: m.kind }); d.touched = true; changed = true; }
+    });
+    if (changed) {
+      S.doors.forEach(function (d) { d.photos.sort(function (a, b) { return String(byId[a.id].createdAt).localeCompare(String(byId[b.id].createdAt)); }); });
+      saveState();
+    }
+    if (lost) { logErr('reconcile', new Error(lost + ' Foto(s) fehlen im Speicher')); toast('⚠ ' + lost + ' Foto(s) nicht mehr im Speicher', 'err', 7000); }
+  });
+}
+
+/* ================= Navigation ================= */
+var currentDoorId = null;
+function saveView(view, id) { try { localStorage.setItem(VIEWKEY, JSON.stringify({ view: view, id: id || null })); } catch (e) {} }
+function loadView() { try { return JSON.parse(localStorage.getItem(VIEWKEY) || 'null'); } catch (e) { return null; } }
+function leaveDoor() {
+  var d = findDoor(currentDoorId);
+  if (d && !d.touched && d.photos.length === 0 && !pending[d.id + ':typenschild'] && !pending[d.id + ':tuer']) {
+    S.doors = S.doors.filter(function (x) { return x.id !== d.id; });
+    saveState();
+  }
+  currentDoorId = null;
+}
+function go(view, id) {
+  if (currentDoorId && !(view === 'door' && id === currentDoorId)) leaveDoor();
+  if (!S.kunde) view = 'setup';
+  if (view === 'door' && !findDoor(id)) view = 'list';
+  saveView(view, id);
+  closeOv();
+  if (view === 'setup') renderSetup();
+  else if (view === 'door') renderDoor(id);
+  else if (view === 'export') renderExport();
+  else renderList();
+  window.scrollTo(0, 0);
+}
+
+/* ================= Ansicht: Start ================= */
+function renderSetup() {
+  currentDoorId = null;
+  app.innerHTML =
+    '<main class="setup">' +
+      '<h1>Türaufnahme</h1>' +
+      (isStandalone() ? '' : '<div class="banner info"><b>Zuerst als App aufs iPhone legen:</b><br>1. Unten auf <b>Teilen</b> tippen (Viereck mit Pfeil nach oben)<br>2. <b>„Zum Home-Bildschirm“</b> wählen (ggf. etwas runterscrollen) → Hinzufügen<br>3. Safari schließen und das neue Icon <b>„Türaufnahme“</b> öffnen<br>Danach nur noch über das Icon arbeiten.</div>') +
+      '<p>Einmal den Kunden eintragen, dann geht\'s los.</p>' +
+      '<label class="lbl" for="kunde">Kunde / Objekt</label>' +
+      '<input type="text" id="kunde" value="' + esc(S.kunde) + '" placeholder="z. B. Musterfirma, Hauptstr. 1" autocomplete="off" enterkeyhint="done">' +
+      '<button class="btn pri w" data-act="start">Los geht\'s</button>' +
+      '<p class="ver">Version ' + esc(VERSION) + '</p>' +
+    '</main>';
+}
+
+/* ================= Ansicht: Übersicht ================= */
+function renderList() {
+  currentDoorId = null;
+  var doors = sortedDoors();
+  var n = doors.length;
+  var miss = doors.filter(function (d) { return !hasTS(d) && !d.keinTypenschild; }).length;
+  var nPh = doors.reduce(function (s, d) { return s + d.photos.length; }, 0);
+  var le = S.lastExport;
+  var unsaved = doors.filter(function (d) { return !le || d.updatedAt > le.at; }).length;
+  var h = '<header class="top"><div class="ttl left">Türaufnahme</div><button class="hbtn" data-act="export">Export</button></header><main>';
+  if (dbFailed) h += '<div class="banner err"><b>⚠ Fotospeicher geht nicht:</b> ' + esc(dbFailed) + '<br>Bitte Safari normal (nicht „Privat“) nutzen. Notfalls Papier.</div>';
+  h += '<div class="card"><button class="kunde" data-act="edit-kunde"><span class="lbl">Kunde</span><span class="kv">' + esc(S.kunde) + '</span><span class="ed">ändern</span></button>' +
+       '<div class="stats"><div><b>' + n + '</b><span>Türen</span></div><div><b>' + nPh + '</b><span>Fotos</span></div><div class="' + (miss ? 'w' : '') + '"><b>' + miss + '</b><span>ohne Typenschild</span></div></div>' +
+       '<div class="pills"><span id="offl" class="pill">⏳ Offline wird vorbereitet…</span><span class="pill ' + (le ? 'ok' : '') + '">' + (le ? '✓ Letzter Export ' + fmtT(le.at) + ' Uhr' : 'Noch kein Export') + '</span></div></div>';
+  if (!isStandalone() && !S.hintDismissed) {
+    h += '<div class="banner info"><b>Tipp – als App aufs iPhone:</b> in Safari unten auf <b>Teilen</b> (Viereck mit Pfeil) → <b>„Zum Home-Bildschirm“</b>. Danach nur noch über das Icon arbeiten.<br><b>Wichtig:</b> Türen, die im Safari erfasst wurden, sieht man in der App nicht – und umgekehrt. Immer am selben Ort bleiben.<button class="bb" data-act="dismiss-hint">Verstanden</button></div>';
+  }
+  if (n && unsaved >= 10) h += '<div class="banner warn"><b>Zwischensicherung:</b> ' + unsaved + ' Türen seit dem letzten Export. Kurz exportieren und „In Dateien sichern“.<button class="bb" data-act="export">Jetzt exportieren</button></div>';
+  if (!n) h += '<div class="empty">Noch keine Tür erfasst.<br>Unten auf <b>„＋ Neue Tür“</b> tippen.</div>';
+  var curG = null, grp = '';
+  var counts = {}; doors.forEach(function (d) { counts[d.geschoss] = (counts[d.geschoss] || 0) + 1; });
+  doors.forEach(function (d) {
+    if (d.geschoss !== curG) {
+      if (curG !== null) grp += '</div>';
+      curG = d.geschoss;
+      grp += '<div class="grp"><h2>' + esc(curG || '?') + ' · ' + counts[curG] + (counts[curG] === 1 ? ' Tür' : ' Türen') + '</h2>';
+    }
+    grp += rowHTML(d);
+  });
+  if (curG !== null) grp += '</div>';
+  h += grp + '<p class="ver">Version ' + esc(VERSION) + '</p></main>' +
+       '<footer class="bar"><button class="btn pri" data-act="new">＋ Neue Tür</button></footer>';
+  app.innerHTML = h;
+  hydrateThumbs(app);
+  checkOffline(0);
+}
+function rowHTML(d) {
+  var ts = null, nT = 0;
+  d.photos.forEach(function (p) { if (p.kind === 'typenschild' && !ts) ts = p; if (p.kind === 'tuer') nT++; });
+  var st;
+  if (ts) st = '<span class="st"><img data-thumb="' + esc(ts.id) + '" alt=""></span>';
+  else if (d.keinTypenschild) st = '<span class="st none">kein<br>Schild</span>';
+  else st = '<span class="st miss">Foto<br>fehlt</span>';
+  var l1 = [d.bereich, d.raum].filter(function (x) { return x && x.trim(); }).map(esc).join(' · ') || '<i style="color:#9aa2ad">ohne Bereich</i>';
+  var l2 = [d.schliesser, nT ? '📷 Tür ' + nT : '', d.bemerkung].filter(function (x) { return x && String(x).trim(); }).join(' · ');
+  return '<button class="row" data-act="open" data-id="' + esc(d.id) + '"><span class="kn">' + esc(kennung(d)) + (isDup(d) ? ' <span class="dup">⚠</span>' : '') + '</span>' +
+         '<span class="info"><b>' + l1 + '</b><small>' + esc(l2) + '</small></span>' + st + '</button>';
+}
+
+var offTimer = null;
+function setPill(el, cls, txt) { el.className = 'pill ' + cls; el.textContent = txt; }
+function checkOffline(attempt) {
+  clearTimeout(offTimer);
+  var el = $('#offl'); if (!el) return;
+  if (!('serviceWorker' in navigator) || !window.caches) { setPill(el, 'warn', '⚠ Offline nicht verfügbar'); return; }
+  Promise.resolve().then(function () {
+    return caches.match('index.html', { ignoreSearch: true });
+  }).then(function (hit) {
+    var el2 = $('#offl'); if (!el2) return;
+    if (hit && navigator.serviceWorker.controller) { setPill(el2, 'ok', '✓ Offline bereit'); return; }
+    if (attempt < 40) { setPill(el2, '', '⏳ Offline wird vorbereitet…'); offTimer = setTimeout(function () { checkOffline(attempt + 1); }, 1500); }
+    else setPill(el2, 'warn', '⚠ Offline nicht bereit – mit Netz neu öffnen');
+  }).catch(function (e) { logErr('checkOffline', e); });
+}
+
+/* ================= Ansicht: Tür ================= */
+function chipsHTML(list, val, extraCls) {
+  return list.map(function (v) { return '<button type="button" class="chip' + (extraCls || '') + (v === val ? ' on' : '') + '" data-v="' + esc(v) + '">' + esc(v) + '</button>'; }).join('');
+}
+function textInput(id, val, ph, extra) {
+  return '<input type="text" id="' + id + '" data-text="' + id + '" value="' + esc(val) + '" placeholder="' + esc(ph) + '" autocomplete="off" enterkeyhint="done" ' + (extra || '') + '>';
+}
+function recentValues(field) {
+  return uniq(S.doors.slice().sort(function (a, b) { return String(b.updatedAt).localeCompare(String(a.updatedAt)); })
+    .map(function (d) { return (d[field] || '').trim(); }).filter(Boolean));
+}
+function renderDoor(id) {
+  var d = findDoor(id);
+  currentDoorId = id;
+  var isOther = GESCHOSSE.indexOf(d.geschoss) < 0;
+  var bereichChips = uniq(recentValues('bereich').slice(0, 6).concat(BEREICH_DEFAULT)).slice(0, 8);
+  var customSchl = recentValues('schliesser').filter(function (v) { return SCHLIESSER.indexOf(v) < 0; }).slice(0, 3);
+  var schlChips = uniq(customSchl.concat(SCHLIESSER));
+  var herstChips = uniq(recentValues('hersteller').filter(function (v) { return HERSTELLER.indexOf(v) < 0; }).slice(0, 2).concat(HERSTELLER));
+  app.innerHTML =
+    '<header class="top"><button class="back" data-act="list">‹ Übersicht</button><div class="ttl" id="doorTitle">' + esc(kennung(d)) + '</div><div class="side" id="savedInd">✓ gespeichert</div></header>' +
+    '<main>' +
+      '<section class="card">' +
+        '<h3>Geschoss</h3>' +
+        '<div class="chips g5" data-field="geschoss">' + chipsHTML(GESCHOSSE, d.geschoss) +
+          '<button type="button" class="chip oth' + (isOther ? ' on' : '') + '" data-v="__other">Andere</button></div>' +
+        '<input type="text" id="gOther" class="' + (isOther ? '' : 'hidden') + '" value="' + (isOther ? esc(d.geschoss) : '') + '" placeholder="z. B. 2.UG, TG, Zwischengeschoss" autocomplete="off" enterkeyhint="done">' +
+        '<div class="nrrow"><span class="lbl">Nr.</span><button type="button" class="nrbtn" data-act="nr-">−</button>' +
+          '<input type="text" id="nr" inputmode="numeric" pattern="[0-9]*" value="' + d.nr + '" autocomplete="off" enterkeyhint="done">' +
+          '<button type="button" class="nrbtn" data-act="nr+">+</button><span class="kenn" id="kenn">' + esc(kennung(d)) + '</span></div>' +
+        '<div id="dupWarn" class="warn hidden"></div>' +
+      '</section>' +
+      '<section class="card">' +
+        '<label class="lbl" for="bereich">Bereich</label>' + textInput('bereich', d.bereich, 'z. B. Treppenhaus Nord') +
+        '<div class="chips sm" data-fill="bereich">' + chipsHTML(bereichChips, d.bereich) + '</div>' +
+        '<label class="lbl sp" for="raum">Raum</label>' + textInput('raum', d.raum, 'z. B. Flur → Heizung, Raum 0.12') +
+      '</section>' +
+      '<section class="card" id="photoSec"></section>' +
+      '<section class="card">' +
+        '<label class="lbl" for="schliesser">Schließer</label>' + textInput('schliesser', d.schliesser, 'Modell, z. B. GEZE TS 5000', 'autocorrect="off" autocapitalize="off" spellcheck="false"') +
+        '<div class="chips sm" data-fill="schliesser">' + chipsHTML(schlChips, d.schliesser) + '</div>' +
+        '<p class="hint">Nicht erkennbar? Leer lassen und Foto „Ganze Tür“ machen.</p>' +
+      '</section>' +
+      '<section class="card">' +
+        '<label class="lbl" for="bemerkung">Bemerkung</label>' +
+        '<textarea id="bemerkung" data-text="bemerkung" rows="3" placeholder="optional – Mikrofon der Tastatur zum Diktieren">' + esc(d.bemerkung) + '</textarea>' +
+      '</section>' +
+      '<details class="card" id="more"' + (S.moreOpen ? ' open' : '') + '><summary>Weitere Angaben <span class="cnt" id="moreCnt"></span></summary><div class="more">' +
+        '<span class="lbl sp">Anforderung</span><div class="chips sm" data-field="anforderung">' + chipsHTML(ANFORDERUNG, d.anforderung) + '</div>' +
+        '<span class="lbl sp">Flügel</span><div class="chips sm" data-field="fluegel">' + chipsHTML(FLUEGEL, d.fluegel) + '</div>' +
+        '<span class="lbl sp">Material</span><div class="chips sm" data-field="material">' + chipsHTML(MATERIAL, d.material) + '</div>' +
+        '<label class="lbl sp" for="hersteller">Hersteller</label>' + textInput('hersteller', d.hersteller, 'Hersteller') +
+        '<div class="chips sm" data-fill="hersteller">' + chipsHTML(herstChips, d.hersteller) + '</div>' +
+        '<span class="lbl sp">Feststellanlage</span><div class="chips sm" data-field="fsa">' + chipsHTML(FSA, d.fsa) + '</div>' +
+        '<label class="lbl sp" for="kundenNr">Türnummer des Kunden</label>' + textInput('kundenNr', d.kundenNr, 'falls an der Tür angeschrieben') +
+      '</div></details>' +
+      '<button type="button" class="btn dout" data-act="del-door">Diese Tür löschen</button>' +
+    '</main>' +
+    '<footer class="bar"><button class="btn sec" data-act="list">Übersicht</button><button class="btn pri" data-act="next">Nächste Tür →</button></footer>';
+  renderPhotoSection();
+  updateKenn(d);
+  updateMoreCnt(d);
+  var more = $('#more');
+  more.addEventListener('toggle', function () { if (S.moreOpen !== more.open) { S.moreOpen = more.open; saveState(); } });
+}
+function photoBlock(d, kind, title) {
+  var ps = d.photos.filter(function (p) { return p.kind === kind; });
+  var pend = pending[d.id + ':' + kind] || 0;
+  var h = '<div class="pblock"><div class="phead"><h3>Foto ' + title + '</h3>' + (ps.length ? '<span class="okb">✓ ' + ps.length + (ps.length === 1 ? ' Foto' : ' Fotos') + '</span>' : '') + '</div>';
+  if (ps.length || pend) {
+    h += '<div class="thumbs">' + ps.map(function (p) { return '<button type="button" class="th" data-act="view-photo" data-id="' + esc(p.id) + '"><img data-thumb="' + esc(p.id) + '" alt=""></button>'; }).join('');
+    for (var i = 0; i < pend; i++) h += '<div class="th spin">speichert…</div>';
+    h += '<label for="camInput" class="th add" data-cam="' + kind + '" aria-label="weiteres Foto">＋</label></div>';
+  } else {
+    h += '<label for="camInput" class="camBig" data-cam="' + kind + '"><span class="ic">📷</span> ' + title + ' fotografieren</label>';
+  }
+  h += '<div class="prow"><label for="libInput" class="link" data-cam="' + kind + '">aus Fotos-App wählen</label>';
+  if (kind === 'typenschild') h += '<label class="chk"><input type="checkbox" data-chk="keinTS"' + (d.keinTypenschild ? ' checked' : '') + '> kein Typenschild / unlesbar</label>';
+  return h + '</div></div>';
+}
+function renderPhotoSection() {
+  var sec = $('#photoSec'); var d = findDoor(currentDoorId);
+  if (!sec || !d) return;
+  sec.innerHTML = photoBlock(d, 'typenschild', 'Typenschild') + photoBlock(d, 'tuer', 'Ganze Tür');
+  hydrateThumbs(sec);
+}
+function updateKenn(d) {
+  var k = kennung(d);
+  var t = $('#doorTitle'); if (t) t.textContent = k;
+  var kk = $('#kenn'); if (kk) kk.textContent = k;
+  var nr = $('#nr'); if (nr && document.activeElement !== nr) nr.value = d.nr;
+  var w = $('#dupWarn');
+  if (w) { if (isDup(d)) { w.textContent = '⚠ ' + k + ' gibt es schon – bitte Nr. prüfen'; w.classList.remove('hidden'); } else w.classList.add('hidden'); }
+}
+function updateMoreCnt(d) {
+  var n = MORE_FIELDS.filter(function (f) { return d[f] && String(d[f]).trim(); }).length;
+  var el = $('#moreCnt'); if (el) el.textContent = n ? '(' + n + ' ausgefüllt)' : '(optional)';
+}
+function setGeschoss(d, g) {
+  if (d.geschoss === g) return;
+  d.geschoss = g;
+  if (!d.nrManual) d.nr = nextNr(g, d.id);
+  touch(d); saveState(); updateKenn(d);
+}
+function markChips(box, val) { Array.prototype.forEach.call(box.children, function (c) { c.classList.toggle('on', c.getAttribute('data-v') === val); }); }
+function setNr(d, n) {
+  n = Math.max(1, Math.min(9999, n));
+  d.nr = n; d.nrManual = true; touch(d); saveState();
+  var nr = $('#nr'); if (nr) nr.value = n;
+  updateKenn(d);
+}
+
+/* ================= Ansicht: Export ================= */
+var zipState = { building: false, p: 0 };
+var lastZip = null;
+function zipCurrent() {
+  if (!lastZip) return false;
+  if (S.doors.length !== lastZip.nDoors) return false;
+  return !S.doors.some(function (d) { return d.updatedAt > lastZip.builtAt; });
+}
+function renderExport() {
+  currentDoorId = null;
+  var doors = S.doors, nPh = doors.reduce(function (s, d) { return s + d.photos.length; }, 0);
+  var miss = doors.filter(function (d) { return !hasTS(d) && !d.keinTypenschild; });
+  app.innerHTML =
+    '<header class="top"><button class="back" data-act="list">‹ Übersicht</button><div class="ttl">Export</div><div class="side"></div></header>' +
+    '<main>' +
+      '<div class="card"><div class="stats"><div><b>' + doors.length + '</b><span>Türen</span></div><div><b>' + nPh + '</b><span>Fotos</span></div><div class="' + (miss.length ? 'w' : '') + '"><b>' + miss.length + '</b><span>ohne Typenschild</span></div></div>' +
+        (miss.length ? '<p class="hint" style="color:var(--wa)">Ohne Typenschild-Foto: ' + esc(sortedDoors().filter(function (d) { return !hasTS(d) && !d.keinTypenschild; }).map(kennung).join(', ')) + '</p>' : '') +
+        (S.lastExport ? '<p class="hint">Letzter Export: ' + fmtDT(S.lastExport.at) + ' (' + S.lastExport.count + ' Türen)</p>' : '') + '</div>' +
+      '<div class="card"><h3>Alles mit Fotos (ZIP)</h3><div id="zipArea"></div></div>' +
+      '<div class="card"><h3>Nur Liste ohne Fotos</h3><p class="hint" style="margin:0 0 10px">Kleine Datei – geht auch bei schlechtem Netz.</p><button type="button" class="btn sec w" data-act="share-csv">Liste teilen (CSV)</button></div>' +
+    '</main>';
+  refreshZipArea();
+}
+function refreshZipArea() {
+  var el = $('#zipArea'); if (!el) return;
+  if (zipState.building) {
+    el.innerHTML = '<p class="hint" style="margin:0" id="zipTxt">ZIP wird erstellt … bitte warten</p><progress id="zipProg" max="1" value="' + zipState.p + '"></progress>';
+    return;
+  }
+  if (lastZip && zipCurrent()) {
+    el.innerHTML = '<div class="zipok">✓ Fertig: ' + esc(lastZip.name) + ' (' + fmtMB(lastZip.blob.size) + ')' + (lastZip.missing ? '<br>⚠ ' + lastZip.missing + ' Foto(s) fehlten' : '') + '</div>' +
+      '<button type="button" class="btn ok w" data-act="share-zip">Teilen / Sichern …</button>' +
+      '<p class="hint">Am sichersten zuerst <b>„In Dateien sichern“</b>, danach nochmal teilen per WhatsApp oder Mail ans Büro.</p>' +
+      '<button type="button" class="btn sec w" data-act="dl-zip">Herunterladen (falls Teilen nicht geht)</button>';
+    return;
+  }
+  el.innerHTML = '<p class="hint" style="margin:0 0 10px">Liste + alle Fotos in einer Datei. Dauert je nach Menge ein paar Sekunden.</p>' +
+    '<button type="button" class="btn pri w" data-act="zip"' + (S.doors.length ? '' : ' disabled') + '>ZIP erstellen</button>';
+}
+
+/* ---- Exportdaten ---- */
+function safeName(s) {
+  return String(s || '').replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/Ä/g, 'Ae').replace(/Ö/g, 'Oe').replace(/Ü/g, 'Ue').replace(/ß/g, 'ss')
+    .replace(/[^A-Za-z0-9._-]+/g, '_').replace(/_+/g, '_').replace(/^[_.]+|[_.]+$/g, '').slice(0, 60);
+}
+function extFor(mime) { return mime === 'image/png' ? 'png' : (mime === 'image/heic' || mime === 'image/heif') ? 'heic' : 'jpg'; }
+function stamp() { var d = new Date(); return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()) + '_' + pad2(d.getHours()) + pad2(d.getMinutes()); }
+function planExport(metaById) {
+  var doors = sortedDoors(), usedBase = {}, list = [];
+  doors.forEach(function (d) {
+    var base = safeName(kennung(d)) || 'Tuer', b = base, k = 2;
+    while (usedBase[b.toLowerCase()]) b = base + '_' + (k++);
+    usedBase[b.toLowerCase()] = 1;
+    var cnt = { typenschild: 0, tuer: 0 };
+    var files = d.photos.map(function (p) {
+      cnt[p.kind] = (cnt[p.kind] || 0) + 1;
+      var m = metaById[p.id];
+      return { id: p.id, kind: p.kind, name: 'fotos/' + b + '_' + (p.kind === 'typenschild' ? 'Typenschild' : 'Tuer') + '_' + cnt[p.kind] + '.' + extFor(m ? m.mime : 'image/jpeg') };
+    });
+    list.push({ door: d, base: b, files: files });
+  });
+  return list;
+}
+function csvCell(v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }
+function buildCSV(plan) {
+  var head = ['Kennung', 'Geschoss', 'Nr', 'Bereich', 'Raum', 'Schließer', 'Bemerkung', 'Anforderung', 'Flügel', 'Material', 'Hersteller', 'Feststellanlage', 'Türnummer Kunde', 'Kein Typenschild', 'Fotos Typenschild', 'Fotos Tür', 'Dateien', 'Erfasst', 'Geändert'];
+  var rows = [head.map(csvCell).join(';')];
+  plan.forEach(function (e) {
+    var d = e.door;
+    var nTS = e.files.filter(function (f) { return f.kind === 'typenschild'; }).length;
+    rows.push([e.base, d.geschoss, d.nr, d.bereich, d.raum, d.schliesser, d.bemerkung, d.anforderung, d.fluegel, d.material, d.hersteller, d.fsa, d.kundenNr,
+      d.keinTypenschild ? 'ja' : '', nTS, e.files.length - nTS, e.files.map(function (f) { return f.name.replace('fotos/', ''); }).join(', '), fmtDT(d.createdAt), fmtDT(d.updatedAt)].map(csvCell).join(';'));
+  });
+  return '﻿' + rows.join('\r\n') + '\r\n';
+}
+function buildJSON(plan) {
+  return JSON.stringify({ app: 'Türaufnahme', version: VERSION, kunde: S.kunde, exportiert: nowISO(), anzahlTueren: plan.length,
+    tueren: plan.map(function (e) {
+      var d = e.door;
+      return { kennung: e.base, geschoss: d.geschoss, nr: d.nr, bereich: d.bereich, raum: d.raum, schliesser: d.schliesser, bemerkung: d.bemerkung,
+        anforderung: d.anforderung, fluegel: d.fluegel, material: d.material, hersteller: d.hersteller, feststellanlage: d.fsa, tuernummerKunde: d.kundenNr,
+        keinTypenschild: !!d.keinTypenschild, erfasst: d.createdAt, geaendert: d.updatedAt,
+        fotos: e.files.map(function (f) { return { datei: f.name, art: f.kind }; }) };
+    }) }, null, 2);
+}
+function buildOverview(plan, okIds) {
+  var rows = plan.map(function (e) {
+    var d = e.door;
+    var imgs = e.files.filter(function (f) { return okIds[f.id]; }).map(function (f) { return '<a href="' + esc(f.name) + '" target="_blank"><img src="' + esc(f.name) + '" alt="" title="' + esc(f.name) + '"></a>'; }).join('');
+    var opt = [d.anforderung, d.fluegel, d.material, d.hersteller, d.fsa ? 'FSA: ' + d.fsa : '', d.kundenNr ? 'Kd-Nr: ' + d.kundenNr : ''].filter(Boolean).map(esc).join(' · ');
+    return '<tr><td><b>' + esc(e.base) + '</b></td><td>' + esc(d.bereich) + '</td><td>' + esc(d.raum) + '</td><td>' + esc(d.schliesser) + '</td><td>' + esc(d.bemerkung) + (opt ? '<br><small>' + opt + '</small>' : '') + (d.keinTypenschild ? '<br><small>kein Typenschild</small>' : '') + '</td><td class="i">' + imgs + '</td></tr>';
+  }).join('');
+  return '<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Türaufnahme ' + esc(S.kunde) + '</title><style>body{font:14px/1.4 Segoe UI,Arial,sans-serif;margin:20px;color:#111}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccc;padding:6px 8px;vertical-align:top;text-align:left}th{background:#f0f2f5}td.i img{height:140px;margin:2px;border:1px solid #ddd}small{color:#555}</style></head><body>' +
+    '<h1>Türaufnahme – ' + esc(S.kunde) + '</h1><p>' + plan.length + ' Türen · exportiert ' + esc(fmtDT(nowISO())) + '</p>' +
+    '<table><thead><tr><th>Tür</th><th>Bereich</th><th>Raum</th><th>Schließer</th><th>Bemerkung / Weitere</th><th>Fotos</th></tr></thead><tbody>' + rows + '</tbody></table></body></html>';
+}
+
+/* ---- ZIP (ohne Kompression, mit CRC32) ---- */
+var CRC_T = (function () { var t = new Uint32Array(256); for (var n = 0; n < 256; n++) { var c = n; for (var k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1); t[n] = c >>> 0; } return t; })();
+function crc32(u8) { var c = 0xFFFFFFFF; for (var i = 0; i < u8.length; i++) c = CRC_T[(c ^ u8[i]) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+function utf8(s) { return new TextEncoder().encode(s); }
+function ZipWriter() {
+  this.parts = []; this.cd = []; this.offset = 0; this.count = 0; this.cdSize = 0;
+  var d = new Date();
+  this.time = ((d.getHours() << 11) | (d.getMinutes() << 5) | Math.floor(d.getSeconds() / 2)) & 0xFFFF;
+  this.date = (((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate()) & 0xFFFF;
+}
+ZipWriter.prototype.add = function (name, data) {
+  var nb = utf8(name), crc = crc32(data), size = data.length;
+  var h = new DataView(new ArrayBuffer(30));
+  h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true); h.setUint16(8, 0, true);
+  h.setUint16(10, this.time, true); h.setUint16(12, this.date, true); h.setUint32(14, crc, true);
+  h.setUint32(18, size, true); h.setUint32(22, size, true); h.setUint16(26, nb.length, true); h.setUint16(28, 0, true);
+  this.parts.push(h.buffer, nb, data);
+  var c = new DataView(new ArrayBuffer(46));
+  c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint16(8, 0x0800, true); c.setUint16(10, 0, true);
+  c.setUint16(12, this.time, true); c.setUint16(14, this.date, true); c.setUint32(16, crc, true); c.setUint32(20, size, true); c.setUint32(24, size, true);
+  c.setUint16(28, nb.length, true); c.setUint16(30, 0, true); c.setUint16(32, 0, true); c.setUint16(34, 0, true); c.setUint16(36, 0, true);
+  c.setUint32(38, 0, true); c.setUint32(42, this.offset, true);
+  this.cd.push(c.buffer, nb); this.cdSize += 46 + nb.length;
+  this.offset += 30 + nb.length + size; this.count++;
+  if (this.parts.length >= 30) this.parts = [new Blob(this.parts)];
+};
+ZipWriter.prototype.finish = function () {
+  var e = new DataView(new ArrayBuffer(22));
+  e.setUint32(0, 0x06054b50, true); e.setUint16(4, 0, true); e.setUint16(6, 0, true); e.setUint16(8, this.count, true); e.setUint16(10, this.count, true);
+  e.setUint32(12, this.cdSize, true); e.setUint32(16, this.offset, true); e.setUint16(20, 0, true);
+  return new Blob(this.parts.concat(this.cd, [e.buffer]), { type: 'application/zip' });
+};
+
+function buildZip(onProgress) {
+  var builtAt = nowISO();
+  var nDoors = S.doors.length;
+  return getAllMeta().then(function (metas) {
+    var metaById = {}; metas.forEach(function (m) { metaById[m.id] = m; });
+    var plan = planExport(metaById);
+    var all = []; plan.forEach(function (e) { e.files.forEach(function (f) { all.push(f); }); });
+    var zw = new ZipWriter(), okIds = {}, missing = [], i = 0;
+    function step() {
+      if (i >= all.length) return Promise.resolve();
+      var f = all[i++];
+      return getRec('photos', f.id).then(function (rec) {
+        if (rec && rec.data) { zw.add(f.name, new Uint8Array(rec.data)); okIds[f.id] = 1; }
+        else missing.push(f.name);
+      }, function (e) { logErr('zip-photo', e); missing.push(f.name); }).then(function () {
+        onProgress(all.length ? i / all.length : 1);
+        return new Promise(function (r) { setTimeout(r, 0); });
+      }).then(step);
+    }
+    return step().then(function () {
+      zw.add('tueren.csv', utf8(buildCSV(plan)));
+      zw.add('tueren.json', utf8(buildJSON(plan)));
+      zw.add('uebersicht.html', utf8(buildOverview(plan, okIds)));
+      var log = []; try { log = JSON.parse(localStorage.getItem(LOGKEY) || '[]'); } catch (e) {}
+      if (missing.length) log.push('Fehlende Fotos beim Export: ' + missing.join(', '));
+      if (log.length) zw.add('fehlerprotokoll.txt', utf8(log.join('\r\n') + '\r\nVersion ' + VERSION + '\r\n' + navigator.userAgent + '\r\n'));
+      var blob = zw.finish();
+      return { blob: blob, name: 'Tueraufnahme_' + (safeName(S.kunde) || 'Objekt') + '_' + stamp() + '.zip', builtAt: builtAt, nDoors: nDoors, missing: missing.length };
+    });
+  });
+}
+function buildZipUI() {
+  if (zipState.building) return;
+  zipState.building = true; zipState.p = 0; refreshZipArea();
+  buildZip(function (p) { zipState.p = p; var pr = $('#zipProg'); if (pr) pr.value = p; }).then(function (z) {
+    lastZip = z;
+    toast(z.missing ? '⚠ ZIP fertig, aber ' + z.missing + ' Foto(s) fehlten' : '✓ ZIP fertig', z.missing ? 'err' : '', 4000);
+  }, function (e) {
+    logErr('zip', e); lastZip = null;
+    toast('⚠ ZIP fehlgeschlagen: ' + errMsg(e), 'err', 7000);
+  }).then(function () { zipState.building = false; refreshZipArea(); });
+}
+function markExported(z) { S.lastExport = { at: z.builtAt, count: z.nDoors }; saveState(); if ($('#zipArea')) renderExport(); }
+function downloadBlob(blob, name) {
+  var u = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = u; a.download = name; a.rel = 'noopener';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(u); }, 120000);
+}
+function shareFile(blob, name, type) {
+  var file;
+  try { file = new File([blob], name, { type: type }); } catch (e) { file = null; }
+  if (file && navigator.canShare && navigator.share && navigator.canShare({ files: [file] })) {
+    return navigator.share({ files: [file] }).then(function () { return 'shared'; }, function (e) {
+      if (e && e.name === 'AbortError') return 'aborted';
+      logErr('share', e);
+      toast('Teilen ging nicht – bitte „Herunterladen“ nehmen', 'err', 5000);
+      return 'failed';
+    });
+  }
+  downloadBlob(blob, name);
+  return Promise.resolve('downloaded');
+}
+
+/* ================= Foto-Großansicht ================= */
+var ovURL = null;
+function closeOv() {
+  if (ovURL) { URL.revokeObjectURL(ovURL); ovURL = null; }
+  ov.innerHTML = ''; ov.classList.add('hidden');
+}
+function viewPhoto(id) {
+  var d = null, idx = 0, tot = 0, kind = '';
+  S.doors.forEach(function (x) { x.photos.forEach(function (p) { if (p.id === id) { d = x; kind = p.kind; } }); });
+  if (d) { var same = d.photos.filter(function (p) { return p.kind === kind; }); tot = same.length; same.forEach(function (p, i) { if (p.id === id) idx = i + 1; }); }
+  getRec('photos', id).then(function (rec) {
+    if (!rec || !rec.data) { toast('⚠ Foto nicht gefunden', 'err'); return; }
+    closeOv();
+    ovURL = URL.createObjectURL(new Blob([rec.data], { type: rec.mime || 'image/jpeg' }));
+    ov.innerHTML = '<div class="ovt">' + esc((d ? kennung(d) + ' · ' : '') + (kind === 'typenschild' ? 'Typenschild' : 'Ganze Tür') + ' ' + idx + '/' + tot) + ' · Tippen = Zoom</div>' +
+      '<div class="sc" id="ovSc"><img src="' + ovURL + '" alt=""></div>' +
+      '<div class="ovb"><button type="button" class="btn sec" data-ov="close">Schließen</button><button type="button" class="btn danger" data-ov="del" data-id="' + esc(id) + '">Foto löschen</button></div>';
+    ov.classList.remove('hidden');
+  }).catch(function (e) { logErr('viewPhoto', e); toast('⚠ Foto konnte nicht geöffnet werden', 'err'); });
+}
+ov.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-ov]');
+  if (b) {
+    if (b.getAttribute('data-ov') === 'close') closeOv();
+    else deletePhoto(b.getAttribute('data-id'));
+    return;
+  }
+  var sc = e.target.closest('.sc');
+  if (!sc) return;
+  var img = sc.querySelector('img'); if (!img) return;
+  if (sc.classList.contains('zoom')) { sc.classList.remove('zoom'); return; }
+  var r = img.getBoundingClientRect();
+  var rx = Math.min(1, Math.max(0, (e.clientX - r.left) / (r.width || 1))), ry = Math.min(1, Math.max(0, (e.clientY - r.top) / (r.height || 1)));
+  sc.classList.add('zoom');
+  sc.scrollLeft = rx * img.offsetWidth - sc.clientWidth / 2;
+  sc.scrollTop = ry * img.offsetHeight - sc.clientHeight / 2;
+});
+function deletePhoto(id) {
+  if (!confirm('Dieses Foto wirklich löschen?')) return;
+  delPhotos([id]).then(function () {
+    S.doors.forEach(function (d) {
+      var before = d.photos.length;
+      d.photos = d.photos.filter(function (p) { return p.id !== id; });
+      if (d.photos.length !== before) touch(d);
+    });
+    saveState(); revokeThumb(id); closeOv(); renderPhotoSection();
+    toast('Foto gelöscht');
+  }, function (e) { logErr('deletePhoto', e); toast('⚠ Löschen fehlgeschlagen: ' + errMsg(e), 'err'); });
+}
+
+/* ================= Aktionen ================= */
+var ACT = {
+  'list': function () { go('list'); },
+  'export': function () { go('export'); },
+  'new': function () { var d = newDoor(); go('door', d.id); },
+  'open': function (a) { go('door', a.getAttribute('data-id')); },
+  'next': function () {
+    var cur = findDoor(currentDoorId), g = cur ? cur.geschoss : null;
+    leaveDoor();
+    var d = newDoor(g);
+    go('door', d.id);
+    toast('Neue Tür ' + kennung(d));
+  },
+  'nr-': function () { var d = findDoor(currentDoorId); if (d) setNr(d, d.nr - 1); },
+  'nr+': function () { var d = findDoor(currentDoorId); if (d) setNr(d, d.nr + 1); },
+  'del-door': function () {
+    var d = findDoor(currentDoorId); if (!d) return;
+    if (!confirm('Tür ' + kennung(d) + (d.photos.length ? ' mit ' + d.photos.length + ' Foto(s)' : '') + ' wirklich löschen?')) return;
+    var ids = d.photos.map(function (p) { return p.id; });
+    S.doors = S.doors.filter(function (x) { return x.id !== d.id; });
+    saveState();
+    currentDoorId = null;
+    delPhotos(ids).catch(function (e) { logErr('delDoorPhotos', e); });
+    ids.forEach(revokeThumb);
+    toast('Tür gelöscht');
+    go('list');
+  },
+  'view-photo': function (a) { viewPhoto(a.getAttribute('data-id')); },
+  'edit-kunde': function () {
+    var v = prompt('Kunde / Objekt', S.kunde);
+    if (v === null) return;
+    v = v.trim(); if (!v) return;
+    S.kunde = v; saveState(); renderList();
+  },
+  'start': function () {
+    var v = ($('#kunde').value || '').trim();
+    if (!v) { toast('Bitte Kunde / Objekt eintragen', 'err'); $('#kunde').focus(); return; }
+    S.kunde = v; if (!S.createdAt) S.createdAt = nowISO(); saveState(); requestPersist(); go('list');
+  },
+  'dismiss-hint': function () { S.hintDismissed = true; saveState(); renderList(); },
+  'zip': function () { buildZipUI(); },
+  'share-zip': function () {
+    if (!lastZip) return;
+    var z = lastZip;
+    shareFile(z.blob, z.name, 'application/zip').then(function (r) { if (r === 'shared' || r === 'downloaded') { markExported(z); toast('✓ Export erledigt'); } });
+  },
+  'dl-zip': function () { if (lastZip) { downloadBlob(lastZip.blob, lastZip.name); markExported(lastZip); } },
+  'share-csv': function () {
+    if (!S.doors.length) { toast('Noch keine Türen'); return; }
+    var plan = planExport({});
+    var blob = new Blob([buildCSV(plan)], { type: 'text/csv' });
+    shareFile(blob, 'Tuerliste_' + (safeName(S.kunde) || 'Objekt') + '_' + stamp() + '.csv', 'text/csv');
+  }
+};
+
+/* ================= Ereignisse ================= */
+app.addEventListener('click', function (e) {
+  var cam = e.target.closest('[data-cam]');
+  if (cam) {
+    if (dbFailed) { e.preventDefault(); toast('⚠ Fotospeicher geht nicht – bitte Papier', 'err', 5000); return; }
+    pendingCam = { doorId: currentDoorId, kind: cam.getAttribute('data-cam') };
+    return; // Standardverhalten: Label öffnet Kamera
+  }
+  var chip = e.target.closest('.chip');
+  if (chip && chip.parentElement) { onChip(chip); return; }
+  var a = e.target.closest('[data-act]');
+  if (a && ACT[a.getAttribute('data-act')]) { e.preventDefault(); ACT[a.getAttribute('data-act')](a); }
+});
+function onChip(chip) {
+  var box = chip.parentElement, v = chip.getAttribute('data-v'), d = findDoor(currentDoorId);
+  if (!d) return;
+  var field = box.getAttribute('data-field'), fill = box.getAttribute('data-fill');
+  if (field === 'geschoss') {
+    var other = $('#gOther');
+    if (v === '__other') {
+      markChips(box, '__other'); other.classList.remove('hidden'); other.focus();
+      if (other.value.trim()) setGeschoss(d, other.value.trim());
+      return;
+    }
+    other.classList.add('hidden'); other.value = '';
+    markChips(box, v); setGeschoss(d, v);
+    return;
+  }
+  if (field) {
+    d[field] = d[field] === v ? '' : v;
+    touch(d); saveState(); markChips(box, d[field]); updateMoreCnt(d);
+    return;
+  }
+  if (fill) {
+    var inp = document.getElementById(fill);
+    d[fill] = d[fill] === v ? '' : v;
+    if (inp) inp.value = d[fill];
+    touch(d); saveState(); markChips(box, d[fill]); updateMoreCnt(d);
+  }
+}
+app.addEventListener('input', function (e) {
+  var t = e.target, d = findDoor(currentDoorId);
+  if (!d) return;
+  var f = t.getAttribute('data-text');
+  if (f) {
+    d[f] = t.value; touch(d); saveState();
+    var box = app.querySelector('[data-fill="' + f + '"]'); if (box) markChips(box, t.value);
+    updateMoreCnt(d);
+    return;
+  }
+  if (t.id === 'gOther') { var g = t.value.trim(); if (g) setGeschoss(d, g); return; }
+  if (t.id === 'nr') {
+    var n = parseInt(String(t.value).replace(/\D/g, ''), 10);
+    if (n >= 1 && n <= 9999) { d.nr = n; d.nrManual = true; touch(d); saveState(); updateKenn(d); }
+  }
+});
+app.addEventListener('change', function (e) {
+  var t = e.target, d = findDoor(currentDoorId);
+  if (!d) return;
+  if (t.getAttribute('data-chk') === 'keinTS') { d.keinTypenschild = t.checked; touch(d); saveState(); }
+  if (t.id === 'nr') t.value = d.nr;
+});
+app.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+    if (e.target.id === 'kunde') { ACT.start(); return; }
+    e.target.blur();
+  }
+});
+
+/* ================= Start ================= */
+function registerSW() {
+  if (!('serviceWorker' in navigator)) return;
+  try {
+    navigator.serviceWorker.register('sw.js').catch(function (e) { logErr('sw', e); });
+    navigator.serviceWorker.addEventListener('controllerchange', function () { checkOffline(0); });
+  } catch (e) { logErr('sw', e); }
+}
+function init() {
+  registerSW();
+  db().then(reconcile).catch(function (e) {
+    logErr('db', e); dbFailed = errMsg(e);
+  }).then(function () {
+    var v = loadView();
+    if (!S.kunde) go('setup');
+    else if (v && v.view === 'door' && v.id && findDoor(v.id)) go('door', v.id);
+    else if (v && v.view === 'export') go('export');
+    else go('list');
+  });
+}
+init();
+})();
+</script>
+</body>
+</html>
