@@ -224,6 +224,14 @@ details.grp[open]>summary .chev{transform:rotate(90deg)}
 .gbtn.dark.red{color:#ff453a}
 .spacer{width:44px;flex:none}
 
+/* ---------- Installationshilfe ---------- */
+.ii{display:inline-block;width:19px;height:19px;vertical-align:-4px;color:var(--tint)}
+.l2{color:var(--l2)}
+.pointer{position:fixed;bottom:4px;z-index:30;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none}
+.pbub{background:var(--tint);color:#fff;font-size:15px;font-weight:700;letter-spacing:-.24px;padding:8px 14px;border-radius:999px;box-shadow:0 6px 16px rgba(31,108,176,.35);white-space:nowrap}
+.parr{width:40px!important;height:40px!important;color:var(--tint);stroke-width:2.8;animation:bob 1s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(-5px)}50%{transform:translateY(5px)}}
+
 /* ---------- Hinweis-Kapsel ---------- */
 #toast{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top) + 62px);z-index:60;display:flex;justify-content:center;pointer-events:none;padding:0 16px}
 #toast div{display:flex;align-items:center;gap:8px;background:rgba(28,28,30,.88);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);color:#fff;padding:11px 18px;border-radius:999px;font-size:15px;font-weight:600;letter-spacing:-.24px;box-shadow:0 8px 28px rgba(0,0,0,.22);max-width:100%;text-align:center;animation:tin .25s ease-out}
@@ -242,7 +250,7 @@ details.grp[open]>summary .chev{transform:rotate(90deg)}
 'use strict';
 
 /* ================= Konfiguration ================= */
-var VERSION = '1.2 · 26.11.2026';
+var VERSION = '1.3 · 26.11.2026';
 var KEY = 'tueraufnahme.v1';
 var VIEWKEY = 'tueraufnahme.view';
 var LOGKEY = 'tueraufnahme.log';
@@ -280,8 +288,18 @@ var ICONS = {
   download: '<path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 20h14"/>',
   info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8h.01"/>',
   ellipsis: '<path d="M6 12h.01M12 12h.01M18 12h.01" stroke-width="3.2"/>',
-  doc: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M8.5 13h7M8.5 16.5h5"/>'
+  doc: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M8.5 13h7M8.5 16.5h5"/>',
+  pagemenu: '<rect x="3.5" y="4.5" width="7" height="5.5" rx="1.3"/><path d="M14 7.2h6.5M3.5 14h17M3.5 18.5h17"/>',
+  chevdown: '<path d="M6 9l6 6 6-6"/>',
+  arrowdown: '<path d="M12 3.5v16M5.5 13.5 12 20l6.5-6.5"/>'
 };
+// Umgebung: iPhone-Safari (Version 26 = neue Leiste mit Menü-Symbol im Adressfeld) oder anderer Browser
+var UA = navigator.userAgent || '';
+var IS_IOS = /iPhone|iPad|iPod/.test(UA) || (/Macintosh/.test(UA) && navigator.maxTouchPoints > 1);
+var IOS_OTHER_BROWSER = IS_IOS && /CriOS|FxiOS|EdgiOS|OPiOS|GSA\//.test(UA);
+var SAFARI_VER = (function () { var m = UA.match(/Version\/(\d+)/); return m ? +m[1] : 0; })();
+var NEW_SAFARI = SAFARI_VER >= 26;
+function ii(n) { return '<svg class="ii" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONS[n] || '') + '</svg>'; }
 function ic(n, cls) { return '<svg class="ic' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONS[n] || '') + '</svg>'; }
 function sq(n, color) { return '<span class="sq" style="background:' + color + '">' + ic(n) + '</span>'; }
 
@@ -306,8 +324,21 @@ function logErr(where, e) {
   try { console.error(msg, e); } catch (x) {}
   try { var l = JSON.parse(localStorage.getItem(LOGKEY) || '[]'); l.push(msg); localStorage.setItem(LOGKEY, JSON.stringify(l.slice(-150))); } catch (x) {}
 }
-window.addEventListener('error', function (e) { logErr('window', e.error || e.message); toast('Fehler: ' + (e.message || '') + ' – Daten sind gespeichert.', 'err', 5000); });
-window.addEventListener('unhandledrejection', function (e) { logErr('promise', e.reason); toast('Fehler: ' + errMsg(e.reason), 'err', 5000); });
+// Nur Fehler aus der App selbst melden – Safari-Erweiterungen/Inhaltsblocker werfen sonst fremde Fehler ("Script error.")
+function pageURL(u) { return String(u || '').split('#')[0].split('?')[0]; }
+window.addEventListener('error', function (e) {
+  var own = !!e.filename && pageURL(e.filename) === pageURL(location.href) && e.message !== 'Script error.';
+  if (!own) { try { console.warn('fremder Fehler ignoriert:', e.message, e.filename); } catch (x) {} return; }
+  logErr('window', e.error || e.message);
+  toast('Fehler: ' + (e.message || '') + ' – Daten sind gespeichert.', 'err', 5000);
+});
+window.addEventListener('unhandledrejection', function (e) {
+  var r = e.reason;
+  var own = (typeof DOMException !== 'undefined' && r instanceof DOMException) || (r && r.stack && String(r.stack).indexOf(location.origin) >= 0);
+  if (!own) { try { console.warn('fremder Fehler ignoriert:', r); } catch (x) {} return; }
+  logErr('promise', r);
+  toast('Fehler: ' + errMsg(r), 'err', 5000);
+});
 
 var toastTimer = null;
 function toast(msg, kind, ms) {
@@ -662,11 +693,26 @@ function navBar(o) {
     '<div class="nr">' + (o.right || '') + '</div></div></header>';
 }
 function installSteps() {
-  return '<div class="grp">' +
-    '<div class="cell ico step">' + sq('share', '#0a84ff') + '<span class="ct">In Safari auf <b>Teilen</b> tippen (bei neuem iOS erst unten auf <b>⋯</b>)</span></div>' +
-    '<div class="cell ico step">' + sq('plus', '#8e8e93') + '<span class="ct"><b>„Zum Home-Bildschirm“</b> wählen – ggf. etwas runterscrollen</span></div>' +
-    '<div class="cell ico step"><img src="icon-180.png" alt=""><span class="ct">App <b>„Türaufnahme“</b> öffnen – <b>mit Netz</b>, bis „Offline bereit“ erscheint</span></div>';
+  var h = '<div class="grp">';
+  if (IOS_OTHER_BROWSER) h += '<div class="cell ico step note">' + sq('warn', 'var(--orange)') + '<span class="ct">Bitte diesen Link in <b>Safari</b> öffnen – nur dort klappt die Installation.</span></div>';
+  if (NEW_SAFARI) {
+    h += '<div class="cell ico step">' + sq('pagemenu', '#0a84ff') + '<span class="ct">Unten links im Adressfeld auf ' + ii('pagemenu') + ' tippen <span class="l2">(siehe Pfeil)</span></span></div>' +
+         '<div class="cell ico step">' + sq('share', '#0a84ff') + '<span class="ct"><b>Teilen</b> wählen</span></div>' +
+         '<div class="cell ico step">' + sq('chevdown', '#8e8e93') + '<span class="ct"><b>Mehr anzeigen</b> ' + ii('chevdown') + ', dann <b>„Zum Home-Bildschirm“</b></span></div>' +
+         '<div class="cell ico step">' + sq('plus', '#8e8e93') + '<span class="ct">„Als Web-App öffnen“ an lassen → <b>Hinzufügen</b></span></div>';
+  } else {
+    h += '<div class="cell ico step">' + sq('share', '#0a84ff') + '<span class="ct">In Safari unten auf <b>Teilen</b> ' + ii('share') + ' tippen' + (IS_IOS ? ' <span class="l2">(siehe Pfeil)</span>' : '') + '</span></div>' +
+         '<div class="cell ico step">' + sq('plus', '#8e8e93') + '<span class="ct"><b>„Zum Home-Bildschirm“</b> wählen – ggf. runterscrollen → <b>Hinzufügen</b></span></div>';
+  }
+  h += '<div class="cell ico step"><img src="icon-180.png" alt=""><span class="ct">App <b>„Türaufnahme“</b> auf dem Home-Bildschirm öffnen – <b>mit Netz</b>, bis „Offline bereit“ erscheint</span></div>';
+  return h;
 }
+// springender Pfeil, der auf das Safari-Symbol in der unteren Leiste zeigt
+function pointerHTML() {
+  if (!IS_IOS || IOS_OTHER_BROWSER || isStandalone()) return '';
+  return '<div class="pointer" style="left:' + (NEW_SAFARI ? '113px' : '50%') + '"><span class="pbub">Hier tippen</span>' + ic('arrowdown', 'parr') + '</div>';
+}
+function browserOK() { try { return sessionStorage.getItem('tueraufnahme.browserOK') === '1'; } catch (e) { return false; } }
 function titleHTML(d) { return '<span class="tg">' + esc(d.geschoss || '?') + '</span><span class="tn">-' + pad2(d.nr || 0) + '</span>'; }
 function lastExportText(at) {
   var d = new Date(at), n = new Date();
@@ -677,17 +723,28 @@ function lastExportText(at) {
 /* ================= Ansicht: Start ================= */
 function renderSetup() {
   currentDoorId = null;
-  app.innerHTML =
-    '<main class="pg">' +
-      '<div class="hero c"><img class="brand" src="logo-full.png" alt="E+S Brandschutz"><h1 class="lt">Türaufnahme</h1><p class="sub">Türen erfassen, Typenschild fotografieren – fertig.</p>' +
-        '<div class="stat"><span id="offl">' + ic('wifi') + 'Offline wird vorbereitet…</span></div></div>' +
-      (isStandalone() ? '' : '<div class="sec"><div class="sh">Zuerst als App aufs iPhone</div>' + installSteps() + '</div><div class="sf">Danach nur noch über das Icon arbeiten – nicht mehr über Safari.</div></div>') +
+  // In Safari auf dem iPhone zuerst installieren lassen (Safari und Home-Bildschirm-App haben getrennte Speicher)
+  var installMode = IS_IOS && !isStandalone() && !browserOK();
+  var hero = '<div class="hero c"><img class="brand" src="logo-full.png" alt="E+S Brandschutz"><h1 class="lt">Türaufnahme</h1>' +
+    '<p class="sub">' + (installMode ? 'Zuerst als App aufs iPhone holen – dauert eine Minute.' : 'Türen erfassen, Typenschild fotografieren – fertig.') + '</p>' +
+    '<div class="stat"><span id="offl">' + ic('wifi') + 'Offline wird vorbereitet…</span></div></div>';
+  var ver = '<p class="ver">Version ' + esc(VERSION) + '</p>';
+  if (installMode) {
+    app.innerHTML = '<main class="pg">' + hero +
+      '<div class="sec"><div class="sh">So kommt die App aufs iPhone</div>' + installSteps() + '</div>' +
+        '<div class="sf">Danach nur noch über das Icon arbeiten – Safari und App speichern getrennt.</div></div>' +
+      '<div class="sec"><div class="grp"><button type="button" class="cell tintc" data-act="browser-ok">Ohne Installation in Safari weiter</button></div>' +
+        '<div class="sf">Nur falls die Installation nicht klappt.</div></div>' +
+      ver + '</main>' + (pointerHTML() ? '<div class="tbfade" style="height:calc(120px + env(safe-area-inset-bottom))"></div>' + pointerHTML() : '');
+  } else {
+    app.innerHTML = '<main class="pg">' + hero +
+      (!isStandalone() && !IS_IOS ? '<div class="sec"><div class="sh">Tipp: als App aufs iPhone</div>' + installSteps() + '</div></div>' : '') +
       '<div class="sec"><div class="sh">Objekt</div><div class="grp"><label class="cell fld"><span class="k">Kunde</span>' +
         '<input type="text" id="kunde" value="' + esc(S.kunde) + '" placeholder="Name, Adresse" autocomplete="off" enterkeyhint="done"></label></div>' +
-        '<div class="sf">Einmal eintragen – gilt für alle Türen.</div></div>' +
-      '<p class="ver">Version ' + esc(VERSION) + '</p>' +
-    '</main>' +
-    '<div class="tbfade"></div><footer class="tb"><button type="button" class="cap pri" data-act="start">Los geht’s</button></footer>';
+        '<div class="sf">' + (IS_IOS && !isStandalone() ? 'Du arbeitest in Safari – die Daten liegen nur hier, nicht in der App.' : 'Einmal eintragen – gilt für alle Türen.') + '</div></div>' +
+      ver + '</main>' +
+      '<div class="tbfade"></div><footer class="tb"><button type="button" class="cap pri" data-act="start">Los geht’s</button></footer>';
+  }
   checkOffline(0);
 }
 
@@ -966,8 +1023,9 @@ function planExport(metaById) {
 }
 function csvCell(v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }
 // Textwerte so schützen, dass Excel sie nicht als Formel, Zahl oder Datum umdeutet ("- defekt", "0815", "1.2")
+function tr(v) { return String(v == null ? '' : v).trim(); }
 function xl(v) {
-  v = String(v == null ? '' : v);
+  v = tr(v);
   return (/^[=+\-@]/.test(v) || /^[\d\s.,\/:\-]+$/.test(v)) ? '\t' + v : v;
 }
 function buildCSV(plan) {
@@ -985,8 +1043,8 @@ function buildJSON(plan) {
   return JSON.stringify({ app: 'Türaufnahme', version: VERSION, kunde: S.kunde, exportiert: nowISO(), anzahlTueren: plan.length,
     tueren: plan.map(function (e) {
       var d = e.door;
-      return { kennung: e.base, geschoss: d.geschoss, nr: d.nr, bereich: d.bereich, raum: d.raum, schliesser: d.schliesser, bemerkung: d.bemerkung,
-        anforderung: d.anforderung, fluegel: d.fluegel, material: d.material, hersteller: d.hersteller, feststellanlage: d.fsa, tuernummerKunde: d.kundenNr,
+      return { kennung: e.base, geschoss: tr(d.geschoss), nr: d.nr, bereich: tr(d.bereich), raum: tr(d.raum), schliesser: tr(d.schliesser), bemerkung: tr(d.bemerkung),
+        anforderung: tr(d.anforderung), fluegel: tr(d.fluegel), material: tr(d.material), hersteller: tr(d.hersteller), feststellanlage: tr(d.fsa), tuernummerKunde: tr(d.kundenNr),
         keinTypenschild: !!d.keinTypenschild, erfasst: d.createdAt, geaendert: d.updatedAt,
         fotos: e.files.map(function (f) { return { datei: f.name, art: f.kind }; }) };
     }) }, null, 2);
@@ -1207,6 +1265,7 @@ var ACT = {
     S.kunde = v; if (!S.createdAt) S.createdAt = nowISO(); saveState(); requestPersist(); go('list');
   },
   'dismiss-hint': function () { S.hintDismissed = true; saveState(); renderList(); },
+  'browser-ok': function () { try { sessionStorage.setItem('tueraufnahme.browserOK', '1'); } catch (e) {} go('setup'); },
   'zip': function () { buildZipUI(); },
   'share-zip': function () {
     if (!lastZip || sharing) return;
