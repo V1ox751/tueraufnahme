@@ -1,5 +1,5 @@
 /* Türaufnahme – Service Worker: hält die App offline verfügbar. */
-var CACHE = 'tueraufnahme-v4';
+var CACHE = 'tueraufnahme-v5';
 var ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-512.png', './logo-full.png', './logo-mark.png'];
 
 function clean(res) {

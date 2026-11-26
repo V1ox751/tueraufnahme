@@ -107,6 +107,8 @@ textarea{display:block;width:100%;border:0;outline:0;resize:none;font-size:17px;
 .chips.scroll{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 -16px;padding:0 16px}
 .chips.scroll::-webkit-scrollbar{display:none}
 .chips.scroll .chip{flex:none}
+.chips.two{display:grid;grid-auto-flow:column;grid-template-rows:repeat(2,auto);grid-auto-columns:max-content;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+.chips.two::-webkit-scrollbar{display:none}
 .chip{height:44px;padding:0 16px;border:0;border-radius:999px;background:var(--fill);color:var(--label);font-size:15px;font-weight:500;letter-spacing:-.24px;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;transition:background-color .15s,color .15s}
 .chip.on{background:var(--tint);color:#fff}
 .gg{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
@@ -250,20 +252,23 @@ details.grp[open]>summary .chev{transform:rotate(90deg)}
 'use strict';
 
 /* ================= Konfiguration ================= */
-var VERSION = '1.3 · 26.11.2026';
+var VERSION = '1.4 · 26.11.2026';
 var KEY = 'tueraufnahme.v1';
 var VIEWKEY = 'tueraufnahme.view';
 var LOGKEY = 'tueraufnahme.log';
 
 var GESCHOSSE = ['UG', 'EG', '1.OG', '2.OG', '3.OG', '4.OG', '5.OG', '6.OG', 'DG'];
-var SCHLIESSER = ['GEZE TS 5000', 'GEZE TS 4000', 'GEZE TS 3000', 'dormakaba TS 93', 'dormakaba TS 92', 'dormakaba TS 83', 'ECO TS 61', 'ECO TS 41', 'ASSA ABLOY DC 700', 'kein Schließer'];
+// Häufigste Schließer aus firmenwissen.db (4.816 Türen, Stand 26.11.2026), Schreibweise wie in der DB
+var SCHLIESSER = ['GEZE TS 5000', 'GEZE TS 4000', 'ECO TS-61 EFR III', 'GEZE TS 5000 R-ISM', 'GEZE TS 5000 R', 'GEZE TS 5000 ISM', 'GEZE TS 5000 IS', 'ECO TS-61 B', 'GEZE TS 5000 RFS', 'Dorma TS 93', 'Federband', 'Antrieb', 'kein Schließer'];
+// Häufigste Feststellanlagen (feststellendes Gerät je Tür) aus firmenwissen.db
+var FSA_TYP = ['ECO TS-61 EFR III', 'GEZE TS 5000 R-ISM', 'GEZE TS 5000 R', 'GEZE RSZ 6 (Zentrale)', 'GEZE TS 5000 RFS', 'GEZE TS 5000 R-IS', 'Dorma TS 93 G-EMR', 'ECO TS-61 SR-EFR III', 'ECO TS-61 SR-EFR II', 'Wandhaftmagnet'];
 var ANFORDERUNG = ['T30', 'T30-RS', 'T60', 'T90', 'T90-RS', 'RS', 'keine'];
 var FLUEGEL = ['1-flügelig', '2-flügelig'];
 var MATERIAL = ['Stahl', 'Alu/Glas', 'Stahl/Glas', 'Holz', 'Sonstiges'];
 var HERSTELLER = ['Hörmann', 'Teckentrup', 'Novoferm', 'Schörghuber', 'Schüco', 'Jansen', 'unbekannt'];
 var FSA = ['ja', 'nein'];
 var BEREICH_DEFAULT = ['Treppenhaus', 'Flur', 'Kellerflur', 'Technikraum', 'Heizungsraum', 'Tiefgarage'];
-var MORE_FIELDS = ['anforderung', 'fluegel', 'material', 'hersteller', 'fsa', 'kundenNr'];
+var MORE_FIELDS = ['anforderung', 'fluegel', 'material', 'hersteller', 'fsa', 'fsaTyp', 'kundenNr'];
 var PHOTO_MAX = { typenschild: 2560, tuer: 2048 };
 
 /* ================= Symbole (im Stil der SF Symbols) ================= */
@@ -419,7 +424,7 @@ function newDoor(g) {
   }
   var t = nowISO();
   var d = { id: uid(), createdAt: t, updatedAt: t, touched: false, fresh: true, geschoss: g, nr: nextNr(g), nrManual: false,
-    bereich: '', raum: '', schliesser: '', bemerkung: '', anforderung: '', fluegel: '', material: '', hersteller: '', fsa: '', kundenNr: '',
+    bereich: '', raum: '', schliesser: '', bemerkung: '', anforderung: '', fluegel: '', material: '', hersteller: '', fsa: '', fsaTyp: '', kundenNr: '',
     keinTypenschild: false, photos: [] };
   S.doors.push(d);
   saveState();
@@ -636,7 +641,7 @@ function reconcile() {
 
 /* ================= Navigation ================= */
 var currentDoorId = null, curView = null, viewAt = 0;
-var TEXT_FIELDS = ['bereich', 'raum', 'schliesser', 'bemerkung', 'anforderung', 'fluegel', 'material', 'hersteller', 'fsa', 'kundenNr'];
+var TEXT_FIELDS = ['bereich', 'raum', 'schliesser', 'bemerkung', 'anforderung', 'fluegel', 'material', 'hersteller', 'fsa', 'fsaTyp', 'kundenNr'];
 function saveView(view, id) { try { localStorage.setItem(VIEWKEY, JSON.stringify({ view: view, id: id || null })); } catch (e) {} }
 function loadView() { try { return JSON.parse(localStorage.getItem(VIEWKEY) || 'null'); } catch (e) { return null; } }
 function pendingFor(id) { return (pending[id + ':typenschild'] || 0) + (pending[id + ':tuer'] || 0); }
@@ -864,7 +869,7 @@ function renderDoor(id) {
       '</div></div>' +
       '<div class="sec"><div class="sh">Schließer</div><div class="grp">' +
         fieldRow('schliesser', 'Modell', d.schliesser, 'z. B. GEZE TS 5000', 'autocorrect="off" autocapitalize="off" spellcheck="false"') +
-        '<div class="cell blk"><div class="chips" data-fill="schliesser">' + chipsHTML(schlChips, d.schliesser) + '</div></div>' +
+        '<div class="cell blk"><div class="chips two" data-fill="schliesser">' + chipsHTML(schlChips, d.schliesser) + '</div></div>' +
       '</div><div class="sf">Nicht erkennbar? Leer lassen und Foto „Ganze Tür“ machen.</div></div>' +
       '<div class="sec"><div class="sh">Bemerkung</div><div class="grp"><div class="cell blk">' +
         '<textarea id="bemerkung" data-text="bemerkung" rows="3" placeholder="optional">' + esc(d.bemerkung) + '</textarea></div></div>' +
@@ -877,6 +882,8 @@ function renderDoor(id) {
         fieldRow('hersteller', 'Hersteller', d.hersteller, 'z. B. Hörmann') +
         '<div class="cell blk"><div class="chips scroll" data-fill="hersteller">' + chipsHTML(herstChips, d.hersteller) + '</div></div>' +
         '<div class="cell blk"><div class="mk">Feststellanlage</div><div class="seg" data-field="fsa">' + chipsHTML(FSA, d.fsa) + '</div></div>' +
+        fieldRow('fsaTyp', 'FSA-Typ', d.fsaTyp, 'z. B. GEZE RSZ 6') +
+        '<div class="cell blk"><div class="chips two" data-fill="fsaTyp">' + chipsHTML(FSA_TYP, d.fsaTyp) + '</div></div>' +
         fieldRow('kundenNr', 'Kunden-Nr.', d.kundenNr, 'Nr. an der Tür') +
       '</details></div>' +
       '<div class="sec"><div class="grp"><button type="button" class="cell dest" data-act="del-door">Tür löschen</button></div></div>' +
@@ -1029,12 +1036,12 @@ function xl(v) {
   return (/^[=+\-@]/.test(v) || /^[\d\s.,\/:\-]+$/.test(v)) ? '\t' + v : v;
 }
 function buildCSV(plan) {
-  var head = ['Kennung', 'Geschoss', 'Nr', 'Bereich', 'Raum', 'Schließer', 'Bemerkung', 'Anforderung', 'Flügel', 'Material', 'Hersteller', 'Feststellanlage', 'Türnummer Kunde', 'Kein Typenschild', 'Fotos Typenschild', 'Fotos Tür', 'Dateien', 'Erfasst', 'Geändert'];
+  var head = ['Kennung', 'Geschoss', 'Nr', 'Bereich', 'Raum', 'Schließer', 'Bemerkung', 'Anforderung', 'Flügel', 'Material', 'Hersteller', 'Feststellanlage', 'FSA-Typ', 'Türnummer Kunde', 'Kein Typenschild', 'Fotos Typenschild', 'Fotos Tür', 'Dateien', 'Erfasst', 'Geändert'];
   var rows = [head.map(csvCell).join(';')];
   plan.forEach(function (e) {
     var d = e.door;
     var nTS = e.files.filter(function (f) { return f.kind === 'typenschild'; }).length;
-    rows.push([xl(e.base), xl(d.geschoss), d.nr, xl(d.bereich), xl(d.raum), xl(d.schliesser), xl(d.bemerkung), xl(d.anforderung), xl(d.fluegel), xl(d.material), xl(d.hersteller), xl(d.fsa), xl(d.kundenNr),
+    rows.push([xl(e.base), xl(d.geschoss), d.nr, xl(d.bereich), xl(d.raum), xl(d.schliesser), xl(d.bemerkung), xl(d.anforderung), xl(d.fluegel), xl(d.material), xl(d.hersteller), xl(d.fsa), xl(d.fsaTyp), xl(d.kundenNr),
       d.keinTypenschild ? 'ja' : '', nTS, e.files.length - nTS, e.files.map(function (f) { return f.name.replace('fotos/', ''); }).join(', '), fmtDT(d.createdAt), fmtDT(d.updatedAt)].map(csvCell).join(';'));
   });
   return '﻿' + rows.join('\r\n') + '\r\n';
@@ -1044,7 +1051,7 @@ function buildJSON(plan) {
     tueren: plan.map(function (e) {
       var d = e.door;
       return { kennung: e.base, geschoss: tr(d.geschoss), nr: d.nr, bereich: tr(d.bereich), raum: tr(d.raum), schliesser: tr(d.schliesser), bemerkung: tr(d.bemerkung),
-        anforderung: tr(d.anforderung), fluegel: tr(d.fluegel), material: tr(d.material), hersteller: tr(d.hersteller), feststellanlage: tr(d.fsa), tuernummerKunde: tr(d.kundenNr),
+        anforderung: tr(d.anforderung), fluegel: tr(d.fluegel), material: tr(d.material), hersteller: tr(d.hersteller), feststellanlage: tr(d.fsa), fsaTyp: tr(d.fsaTyp), tuernummerKunde: tr(d.kundenNr),
         keinTypenschild: !!d.keinTypenschild, erfasst: d.createdAt, geaendert: d.updatedAt,
         fotos: e.files.map(function (f) { return { datei: f.name, art: f.kind }; }) };
     }) }, null, 2);
@@ -1053,7 +1060,7 @@ function buildOverview(plan, okIds) {
   var rows = plan.map(function (e) {
     var d = e.door;
     var imgs = e.files.filter(function (f) { return okIds[f.id]; }).map(function (f) { return '<a href="' + esc(f.name) + '" target="_blank"><img src="' + esc(f.name) + '" alt="" title="' + esc(f.name) + '"></a>'; }).join('');
-    var opt = [d.anforderung, d.fluegel, d.material, d.hersteller, d.fsa ? 'FSA: ' + d.fsa : '', d.kundenNr ? 'Kd-Nr: ' + d.kundenNr : ''].filter(Boolean).map(esc).join(' · ');
+    var opt = [d.anforderung, d.fluegel, d.material, d.hersteller, d.fsa ? 'FSA: ' + d.fsa : '', d.fsaTyp ? 'FSA-Typ: ' + d.fsaTyp : '', d.kundenNr ? 'Kd-Nr: ' + d.kundenNr : ''].filter(Boolean).map(esc).join(' · ');
     return '<tr><td><b>' + esc(e.base) + '</b></td><td>' + esc(d.bereich) + '</td><td>' + esc(d.raum) + '</td><td>' + esc(d.schliesser) + '</td><td>' + esc(d.bemerkung) + (opt ? '<br><small>' + opt + '</small>' : '') + (d.keinTypenschild ? '<br><small>kein Typenschild</small>' : '') + '</td><td class="i">' + imgs + '</td></tr>';
   }).join('');
   return '<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Türaufnahme ' + esc(S.kunde) + '</title><style>body{font:14px/1.4 -apple-system,Segoe UI,Arial,sans-serif;margin:24px;color:#111}h1{margin:0 0 4px}table{border-collapse:collapse;width:100%;margin-top:16px}th,td{border:1px solid #d1d1d6;padding:6px 8px;vertical-align:top;text-align:left}th{background:#f2f2f7}td{white-space:pre-wrap}td.i{white-space:normal}td.i img{height:140px;margin:2px;border-radius:6px;border:1px solid #ddd}small{color:#555}</style></head><body>' +
@@ -1350,7 +1357,15 @@ function onChip(chip) {
     var inp = document.getElementById(fill);
     d[fill] = d[fill] === v ? '' : v;
     if (inp) inp.value = d[fill];
+    syncFsa(d);
     touch(d); saveState(); markChips(box, d[fill]); updateMoreCnt(d);
+  }
+}
+// FSA-Typ gewählt -> Feststellanlage automatisch auf "ja"
+function syncFsa(d) {
+  if (String(d.fsaTyp || '').trim() && d.fsa !== 'ja') {
+    d.fsa = 'ja';
+    var box = app.querySelector('[data-field="fsa"]'); if (box) markChips(box, 'ja');
   }
 }
 app.addEventListener('input', function (e) {
@@ -1358,7 +1373,7 @@ app.addEventListener('input', function (e) {
   if (!d) return;
   var f = t.getAttribute('data-text');
   if (f) {
-    d[f] = t.value; touch(d); saveState();
+    d[f] = t.value; if (f === 'fsaTyp') syncFsa(d); touch(d); saveState();
     var box = app.querySelector('[data-fill="' + f + '"]'); if (box) markChips(box, t.value);
     updateMoreCnt(d);
     return;
