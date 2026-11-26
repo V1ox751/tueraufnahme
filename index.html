@@ -16,10 +16,10 @@
 <title>Türaufnahme · E+S Brandschutz</title>
 <style>
 :root{
-  --bg:#f2f2f7; --cell:#fff; --label:#000; --l2:rgba(60,60,67,.6); --l3:rgba(60,60,67,.3); --sep:rgba(60,60,67,.2);
+  --bg:#f2f2f7; --cell:#fff; --label:#000; --l2:rgba(60,60,67,.76); --l3:rgba(60,60,67,.3); --sep:rgba(60,60,67,.2);
   --fill:rgba(118,118,128,.12); --press:#e5e5ea;
   --tint:#1f6cb0; --tintbg:rgba(31,108,176,.12); --navy:#1e486c;
-  --green:#34c759; --greenT:#248a3d; --orange:#ff9500; --orangeT:#c25e00; --red:#ff3b30; --redT:#d70015; --indigo:#5856d6; --gray:#8e8e93;
+  --green:#34c759; --greenT:#1d7a34; --orange:#ff9500; --orangeT:#a35200; --red:#ff3b30; --redT:#d70015; --indigo:#5856d6; --gray:#8e8e93;
   --r:22px;
   --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue","Segoe UI",Roboto,Arial,sans-serif;
   --round:ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
@@ -40,7 +40,9 @@ button,label,summary{touch-action:manipulation;cursor:pointer;-webkit-user-selec
 .nav-in{height:56px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:0 16px;max-width:680px;margin:0 auto}
 .nl{justify-self:start;display:flex;align-items:center;gap:8px}
 .nr{justify-self:end;display:flex;align-items:center}
-.nt{font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw;transition:opacity .2s}
+.nt{font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw;transition:opacity .2s;display:flex;min-width:0}
+.nt .tg{overflow:hidden;text-overflow:ellipsis;min-width:0}
+.nt .tn{flex:none}
 .nav.lg .nt{opacity:0}
 .nav.lg.tshow .nt{opacity:1}
 .saved{font-size:13px;color:var(--l2);display:flex;align-items:center;gap:4px;transition:color .2s;letter-spacing:-.08px}
@@ -60,12 +62,15 @@ button,label,summary{touch-action:manipulation;cursor:pointer;-webkit-user-selec
 .hero{padding:2px 20px 20px}
 .brand{height:30px;display:block;margin:0 0 14px}
 .lt{font-size:34px;line-height:41px;font-weight:700;letter-spacing:.37px;margin:0}
-.kbtn{display:inline-flex;align-items:center;gap:4px;border:0;background:none;padding:4px 0 0;font-size:17px;color:var(--l2);max-width:100%;text-align:left}
+.kbtn{display:inline-flex;align-items:center;gap:4px;border:0;background:none;padding:0;min-height:44px;font-size:17px;color:var(--l2);max-width:100%;text-align:left}
 .kbtn span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kbtn .ic{width:14px;height:14px;stroke-width:3;color:var(--l3)}
 .hero.c{text-align:center;padding-top:36px}
 .hero.c .brand{height:58px;margin:0 auto 22px}
-.sub{font-size:17px;color:var(--l2);margin:8px 0 0}
+.hero .brand{height:36px}
+.hero.c .brand{height:58px}
+.sub{font-size:17px;color:var(--l2);margin:8px 0 0;text-wrap:balance}
+.hero.c .stat{justify-content:center;margin:12px 0 0;padding:0}
 
 /* ---------- Listen (inset grouped) ---------- */
 .sec{margin:0 16px 30px}
@@ -93,13 +98,16 @@ button.cell:active,label.cell.link:active,summary.cell:active,label.cell.tap:act
 
 /* Eingabezeilen */
 .fld .k{width:96px;flex:none}
-.fld input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:17px;padding:10px 0;color:var(--label);caret-color:var(--tint);-webkit-appearance:none;appearance:none;border-radius:0}
+.fld input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:17px;padding:10px 0;color:var(--label);caret-color:var(--tint);-webkit-appearance:none;appearance:none;border-radius:0;text-overflow:ellipsis}
 input::placeholder,textarea::placeholder{color:var(--l3);opacity:1}
 textarea{display:block;width:100%;border:0;outline:0;resize:none;font-size:17px;min-height:92px;background:transparent;caret-color:var(--tint);padding:2px 2px;line-height:1.35}
 
 /* Auswahl-Kapseln */
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{height:38px;padding:0 15px;border:0;border-radius:999px;background:var(--fill);color:var(--label);font-size:15px;font-weight:500;letter-spacing:-.24px;display:inline-flex;align-items:center;justify-content:center;transition:background-color .15s,color .15s}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chips.scroll{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+.chips.scroll::-webkit-scrollbar{display:none}
+.chips.scroll .chip{flex:none}
+.chip{height:44px;padding:0 16px;border:0;border-radius:999px;background:var(--fill);color:var(--label);font-size:15px;font-weight:500;letter-spacing:-.24px;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;transition:background-color .15s,color .15s}
 .chip.on{background:var(--tint);color:#fff}
 .gg{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 .gg .chip{height:44px;padding:0 2px;font-size:16px;font-weight:600}
@@ -112,8 +120,9 @@ textarea{display:block;width:100%;border:0;outline:0;resize:none;font-size:17px;
 /* Stepper Nr. */
 .nrc .k{flex:1}
 .stepper{display:flex;align-items:center;gap:8px}
-.stp{width:50px;height:42px;border:0;border-radius:999px;background:var(--fill);font-size:26px;font-weight:400;color:var(--label);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
-#nr{width:66px;height:42px;text-align:center;font-family:var(--round);font-size:21px;font-weight:700;border:0;border-radius:14px;background:var(--fill);outline:0;color:var(--label);-webkit-appearance:none;appearance:none;padding:0;letter-spacing:0}
+.stp{width:52px;height:44px;border:0;border-radius:999px;background:var(--fill);font-size:26px;font-weight:400;color:var(--label);display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
+#nr.dup{box-shadow:0 0 0 2px var(--red);color:var(--redT)}
+#nr{width:66px;height:44px;text-align:center;font-family:var(--round);font-size:21px;font-weight:700;border:0;border-radius:14px;background:var(--fill);outline:0;color:var(--label);-webkit-appearance:none;appearance:none;padding:0;letter-spacing:0}
 #nr:focus{box-shadow:0 0 0 2px var(--tint)}
 
 /* Fotos */
@@ -124,8 +133,8 @@ textarea{display:block;width:100%;border:0;outline:0;resize:none;font-size:17px;
 .camBig{display:flex;align-items:center;justify-content:center;gap:10px;height:56px;border-radius:999px;background:var(--tintbg);color:var(--tint);font-size:17px;font-weight:600}
 .camBig .ic{width:24px;height:24px}
 .camBig:active{background:rgba(31,108,176,.2)}
-.thumbs{display:flex;flex-wrap:wrap;gap:8px}
-.th{width:78px;height:78px;border-radius:14px;overflow:hidden;border:0;padding:0;background:var(--fill);display:flex;align-items:center;justify-content:center;color:var(--l2);font-size:22px}
+.thumbs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.th{width:auto;height:auto;aspect-ratio:1/1;min-height:64px;border-radius:14px;overflow:hidden;border:0;padding:0;background:var(--fill);display:flex;align-items:center;justify-content:center;color:var(--l2);font-size:22px}
 .th img{width:100%;height:100%;object-fit:cover;display:block}
 .th.add{background:var(--tintbg);color:var(--tint)}
 .th.add .ic{width:28px;height:28px}
@@ -149,13 +158,14 @@ details.grp[open]>summary .chev{transform:rotate(90deg)}
 
 /* ---------- Übersicht ---------- */
 .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 16px 12px}
-.tile{background:var(--cell);border-radius:var(--r);padding:13px 14px 12px}
-.tile b{display:block;font-family:var(--round);font-size:30px;font-weight:700;line-height:1.1;letter-spacing:0}
-.tile span{font-size:13px;color:var(--l2);letter-spacing:-.08px}
+.tile{background:var(--cell);border-radius:var(--r);padding:10px 12px}
+.tile b{display:block;font-family:var(--round);font-size:26px;font-weight:700;line-height:1.15;letter-spacing:0}
+.tile span{display:block;font-size:13px;line-height:16px;color:var(--l2);letter-spacing:-.08px}
 .tile.warn b{color:var(--orangeT)}
 .stat{display:flex;flex-wrap:wrap;gap:6px 16px;padding:0 20px;margin:0 16px 28px;font-size:13px;color:var(--l2);letter-spacing:-.08px}
-.stat span{display:inline-flex;align-items:center;gap:5px}
-.stat .ic{width:15px;height:15px;stroke-width:2.4}
+.stat>span{display:inline-flex;align-items:flex-start;gap:5px}
+.stat .ic{width:15px;height:15px;stroke-width:2.4;margin-top:1px}
+.nw{white-space:nowrap}
 .stat .ok{color:var(--greenT);font-weight:600}
 .stat .warn{color:var(--orangeT);font-weight:600}
 .row{min-height:76px;padding:10px 14px 10px 14px}
@@ -167,8 +177,9 @@ details.grp[open]>summary .chev{transform:rotate(90deg)}
 .r1{font-size:17px;font-weight:600;display:flex;align-items:center;gap:6px;letter-spacing:-.41px}
 .r2,.r3{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .r2{font-size:15px;color:var(--l2);letter-spacing:-.24px}
-.r3{font-size:13px;color:var(--l3);letter-spacing:-.08px}
-.badge{font-size:12px;font-weight:600;letter-spacing:-.08px;padding:2px 8px;border-radius:999px;color:var(--orangeT);background:rgba(255,149,0,.14)}
+.r3{font-size:13px;color:var(--l2);letter-spacing:-.08px}
+.badge{font-size:12px;font-weight:600;letter-spacing:-.08px;padding:2px 8px;border-radius:999px;color:var(--orangeT);background:rgba(255,149,0,.14);white-space:nowrap}
+.badge.dup{color:var(--redT);background:rgba(255,59,48,.12)}
 .empty{text-align:center;color:var(--l2);padding:26px 36px 30px}
 .empty .ic{width:54px;height:54px;color:var(--l3);margin:0 auto 12px;stroke-width:1.5}
 .empty b{display:block;color:var(--label);font-size:20px;font-weight:600;margin-bottom:4px}
@@ -191,7 +202,11 @@ details.grp[open]>summary .chev{transform:rotate(90deg)}
 /* Export */
 .prog{height:6px;border-radius:999px;background:var(--fill);overflow:hidden;margin-top:12px}
 .prog i{display:block;height:100%;width:0;background:var(--tint);transition:width .2s}
-.cap+.cap{margin-top:10px}
+.cell.blk .cap+.cap{margin-top:10px}
+.zipn{display:block;font-size:13px;color:var(--l2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.08px;margin-top:2px}
+.sf.warnf{display:flex;align-items:center;gap:6px}
+.sf.warnf .ic{width:16px;height:16px;color:var(--red)}
+.sf.warnf.dupw{color:var(--redT)}
 
 /* ---------- Großansicht ---------- */
 #ov{position:fixed;inset:0;z-index:50;background:#000;display:flex;flex-direction:column}
@@ -201,7 +216,10 @@ details.grp[open]>summary .chev{transform:rotate(90deg)}
 #ov .sc img{max-width:100%;max-height:100%;object-fit:contain;display:block}
 #ov .sc.zoom{display:block}
 #ov .sc.zoom img{max-width:none;max-height:none;width:300%}
-#ov .ovb{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px calc(14px + env(safe-area-inset-bottom));color:rgba(255,255,255,.6);font-size:13px}
+#ov .ovb{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px calc(14px + env(safe-area-inset-bottom));color:rgba(255,255,255,.7);font-size:13px}
+#ov .ovb .hint{flex:1;text-align:center;transition:opacity .2s}
+#ov .sc.zoom+.ovb .hint{opacity:0}
+#ov .gbtn:disabled{opacity:.3}
 .gbtn.dark{background:rgba(72,72,74,.7);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.14)}
 .gbtn.dark.red{color:#ff453a}
 .spacer{width:44px;flex:none}
@@ -224,7 +242,7 @@ details.grp[open]>summary .chev{transform:rotate(90deg)}
 'use strict';
 
 /* ================= Konfiguration ================= */
-var VERSION = '1.1 · 26.11.2026';
+var VERSION = '1.2 · 26.11.2026';
 var KEY = 'tueraufnahme.v1';
 var VIEWKEY = 'tueraufnahme.view';
 var LOGKEY = 'tueraufnahme.log';
@@ -293,7 +311,7 @@ window.addEventListener('unhandledrejection', function (e) { logErr('promise', e
 
 var toastTimer = null;
 function toast(msg, kind, ms) {
-  toastEl.innerHTML = '<div class="' + (kind || '') + '">' + (kind === 'err' ? ic('warn') : '') + '<span>' + esc(msg) + '</span></div>';
+  toastEl.innerHTML = '<div class="' + (kind || '') + '">' + (kind === 'err' ? ic('warn') : kind === 'ok' ? ic('check') : '') + '<span>' + esc(msg) + '</span></div>';
   clearTimeout(toastTimer);
   toastTimer = setTimeout(function () { toastEl.innerHTML = ''; }, ms || 2000);
 }
@@ -369,7 +387,7 @@ function newDoor(g) {
     g = last ? last.geschoss : 'EG';
   }
   var t = nowISO();
-  var d = { id: uid(), createdAt: t, updatedAt: t, touched: false, geschoss: g, nr: nextNr(g), nrManual: false,
+  var d = { id: uid(), createdAt: t, updatedAt: t, touched: false, fresh: true, geschoss: g, nr: nextNr(g), nrManual: false,
     bereich: '', raum: '', schliesser: '', bemerkung: '', anforderung: '', fluegel: '', material: '', hersteller: '', fsa: '', kundenNr: '',
     keinTypenschild: false, photos: [] };
   S.doors.push(d);
@@ -393,21 +411,39 @@ function db() {
       if (!d.objectStoreNames.contains('photos')) d.createObjectStore('photos', { keyPath: 'id' });
       if (!d.objectStoreNames.contains('thumbs')) d.createObjectStore('thumbs', { keyPath: 'id' });
     };
-    r.onsuccess = function () { var d = r.result; d.onversionchange = function () { d.close(); }; res(d); };
+    r.onsuccess = function () {
+      var d = r.result;
+      // Verbindung kann von iOS gekappt werden -> beim nächsten Zugriff neu öffnen
+      d.onversionchange = function () { try { d.close(); } catch (x) {} dbp = null; };
+      d.onclose = function () { dbp = null; };
+      res(d);
+    };
     r.onerror = function () { rej(r.error || new Error('Datenbank-Fehler')); };
   });
   dbp.catch(function () { dbp = null; });
   return dbp;
 }
-function tx(stores, mode, fn) {
+function isConnErr(e) { return !!e && (e.name === 'InvalidStateError' || e.name === 'UnknownError' || /clos|lost|connection/i.test(e.message || '')); }
+function tx(stores, mode, fn, retried) {
+  var conn = null;
   return db().then(function (d) {
+    conn = d;
     return new Promise(function (res, rej) {
-      var t = d.transaction(stores, mode), out = {};
+      var t, out = {};
+      try { t = d.transaction(stores, mode); } catch (e) { rej(e); return; }
       t.oncomplete = function () { res(out.v); };
       t.onerror = function () { rej(t.error || new Error('Transaktion fehlgeschlagen')); };
       t.onabort = function () { rej(t.error || new Error('Transaktion abgebrochen')); };
       try { fn(t, out); } catch (e) { try { t.abort(); } catch (x) {} rej(e); }
     });
+  }).catch(function (e) {
+    if (!retried && isConnErr(e)) {
+      logErr('tx-retry', e);
+      try { if (conn) conn.close(); } catch (x) {}
+      dbp = null;
+      return tx(stores, mode, fn, true);
+    }
+    throw e;
   });
 }
 function putPhoto(meta, data, thumb) {
@@ -470,6 +506,7 @@ function resizeToJpeg(img, maxEdge, q) {
   });
 }
 function processPhoto(file, kind) {
+  if (!file || !file.size) return Promise.reject(new Error('Leere Bilddatei'));
   var url = URL.createObjectURL(file);
   var img = null;
   return loadImg(url).then(function (im) {
@@ -485,7 +522,7 @@ function processPhoto(file, kind) {
     });
   }, function (e) {
     logErr('decode', e);
-    return blobToAB(file).then(function (ab) { return { data: ab, thumb: null, mime: file.type || 'image/jpeg', w: 0, h: 0, resized: false }; });
+    return blobToAB(file).then(function (ab) { return { data: ab, thumb: null, mime: file.type || 'image/jpeg', w: 0, h: 0, resized: false, unreadable: true }; });
   }).then(function (r) { URL.revokeObjectURL(url); return r; }, function (e) { URL.revokeObjectURL(url); throw e; });
 }
 
@@ -503,15 +540,21 @@ function addPhotos(files, doorId, kind) {
         var meta = { id: id, doorId: doorId, kind: kind, mime: p.mime, w: p.w, h: p.h, size: p.data.byteLength, createdAt: nowISO() };
         return putPhoto(meta, p.data, p.thumb).then(function () {
           var d = findDoor(doorId);
-          if (d) { d.photos.push({ id: id, kind: kind }); if (kind === 'typenschild') d.keinTypenschild = false; touch(d); saveState(); }
-          toast('✓ Foto gespeichert');
+          if (!d) { delPhotos([id]).catch(function (e) { logErr('orphan-del', e); }); return; }   // Tür inzwischen gelöscht
+          d.photos.push({ id: id, kind: kind }); if (kind === 'typenschild') d.keinTypenschild = false; touch(d);
+          if (!saveState()) return;
+          if (p.unreadable) toast('Foto gespeichert, aber nicht lesbar – bitte ansehen und ggf. neu aufnehmen', 'err', 7000);
+          else toast('Foto gespeichert', 'ok');
         });
       }).catch(function (e) {
         logErr('addPhoto', e);
-        toast('Foto NICHT gespeichert: ' + errMsg(e) + ' – bitte nochmal', 'err', 7000);
+        var msg = e && e.name === 'QuotaExceededError' ? 'Speicher voll – bitte jetzt exportieren' : errMsg(e) + ' – bitte nochmal versuchen';
+        toast('Foto NICHT gespeichert: ' + msg, 'err', 7000);
       }).then(function () {
         pending[key]--;
         if (currentDoorId === doorId) renderPhotoSection();
+        else if (curView === 'list') rerenderKeepScroll();
+        else if (curView === 'export') refreshZipArea();
       });
     });
   });
@@ -537,11 +580,21 @@ function reconcile() {
       if (d.photos.length !== before) { lost += before - d.photos.length; changed = true; }
       d.photos.forEach(function (p) { ref[p.id] = 1; });
     });
+    var recovered = 0;
     metas.forEach(function (m) {
       if (ref[m.id]) return;
       var d = findDoor(m.doorId);
-      if (d) { d.photos.push({ id: m.id, kind: m.kind }); d.touched = true; changed = true; }
+      if (!d) {
+        // Fotos ohne Tür (z. B. Textspeicher beschädigt) nicht verlieren: als eigene Tür wiederherstellen
+        var t = nowISO();
+        d = { id: m.doorId, createdAt: m.createdAt || t, updatedAt: t, touched: true, fresh: false, geschoss: '?', nr: nextNr('?'), nrManual: true,
+          bereich: 'Wiederhergestellte Fotos – bitte prüfen', raum: '', schliesser: '', bemerkung: '', anforderung: '', fluegel: '', material: '', hersteller: '', fsa: '', kundenNr: '',
+          keinTypenschild: false, photos: [] };
+        S.doors.push(d); recovered++;
+      }
+      d.photos.push({ id: m.id, kind: m.kind }); d.touched = true; changed = true;
     });
+    if (recovered) toast(recovered + ' Tür(en) mit Fotos wiederhergestellt – bitte prüfen', 'err', 7000);
     if (changed) {
       S.doors.forEach(function (d) { d.photos.sort(function (a, b) { return String(byId[a.id].createdAt).localeCompare(String(byId[b.id].createdAt)); }); });
       saveState();
@@ -551,29 +604,48 @@ function reconcile() {
 }
 
 /* ================= Navigation ================= */
-var currentDoorId = null;
+var currentDoorId = null, curView = null, viewAt = 0;
+var TEXT_FIELDS = ['bereich', 'raum', 'schliesser', 'bemerkung', 'anforderung', 'fluegel', 'material', 'hersteller', 'fsa', 'kundenNr'];
 function saveView(view, id) { try { localStorage.setItem(VIEWKEY, JSON.stringify({ view: view, id: id || null })); } catch (e) {} }
 function loadView() { try { return JSON.parse(localStorage.getItem(VIEWKEY) || 'null'); } catch (e) { return null; } }
+function pendingFor(id) { return (pending[id + ':typenschild'] || 0) + (pending[id + ':tuer'] || 0); }
+function pendingTotal() { var n = 0; for (var k in pending) n += pending[k] || 0; return n; }
+function isEmptyDoor(d) {
+  return d.photos.length === 0 && !d.keinTypenschild && !pendingFor(d.id) &&
+    TEXT_FIELDS.every(function (f) { return !String(d[f] || '').trim(); });
+}
 function leaveDoor() {
   var d = findDoor(currentDoorId);
-  if (d && !d.touched && d.photos.length === 0 && !pending[d.id + ':typenschild'] && !pending[d.id + ':tuer']) {
+  if (d && d.fresh && isEmptyDoor(d)) {
+    // neu angelegte Tür ohne jeden Inhalt nicht mitzählen
     S.doors = S.doors.filter(function (x) { return x.id !== d.id; });
     saveState();
-  }
+  } else if (d && d.fresh) { d.fresh = false; saveState(); }
   currentDoorId = null;
 }
 function go(view, id) {
   if (currentDoorId && !(view === 'door' && id === currentDoorId)) leaveDoor();
   if (!S.kunde) view = 'setup';
   if (view === 'door' && !findDoor(id)) view = 'list';
+  if (view !== 'export') lastZip = null;   // großen ZIP-Speicher freigeben
   saveView(view, id);
   closeOv();
+  curView = view;
   if (view === 'setup') renderSetup();
   else if (view === 'door') renderDoor(id);
   else if (view === 'export') renderExport();
   else renderList();
+  viewAt = Date.now();
   window.scrollTo(0, 0);
   onScroll();
+}
+function rerenderKeepScroll() {
+  var y = window.scrollY || 0;
+  if (curView === 'list') renderList();
+  else if (curView === 'export') renderExport();
+  else if (curView === 'door' && currentDoorId && findDoor(currentDoorId)) renderDoor(currentDoorId);
+  else { go('list'); return; }
+  window.scrollTo(0, y); onScroll();
 }
 function onScroll() {
   var n = $('#nav'); if (!n) return;
@@ -586,14 +658,20 @@ window.addEventListener('scroll', onScroll, { passive: true });
 function navBar(o) {
   return '<header class="nav ' + (o.large ? 'lg' : 'solid') + '" id="nav"><div class="nav-in">' +
     '<div class="nl">' + (o.back ? '<button type="button" class="gbtn circ" data-act="list" aria-label="Zurück zur Übersicht">' + ic('back') + '</button>' : '') + '</div>' +
-    '<div class="nt"' + (o.titleId ? ' id="' + o.titleId + '"' : '') + '>' + esc(o.title || '') + '</div>' +
+    '<div class="nt"' + (o.titleId ? ' id="' + o.titleId + '"' : '') + '>' + (o.titleHTML || esc(o.title || '')) + '</div>' +
     '<div class="nr">' + (o.right || '') + '</div></div></header>';
 }
 function installSteps() {
   return '<div class="grp">' +
-    '<div class="cell ico step">' + sq('share', '#0a84ff') + '<span class="ct">In Safari unten auf <b>Teilen</b> tippen</span></div>' +
+    '<div class="cell ico step">' + sq('share', '#0a84ff') + '<span class="ct">In Safari auf <b>Teilen</b> tippen (bei neuem iOS erst unten auf <b>⋯</b>)</span></div>' +
     '<div class="cell ico step">' + sq('plus', '#8e8e93') + '<span class="ct"><b>„Zum Home-Bildschirm“</b> wählen – ggf. etwas runterscrollen</span></div>' +
-    '<div class="cell ico step"><img src="icon-180.png" alt=""><span class="ct">Safari schließen, App <b>„Türaufnahme“</b> öffnen</span></div>';
+    '<div class="cell ico step"><img src="icon-180.png" alt=""><span class="ct">App <b>„Türaufnahme“</b> öffnen – <b>mit Netz</b>, bis „Offline bereit“ erscheint</span></div>';
+}
+function titleHTML(d) { return '<span class="tg">' + esc(d.geschoss || '?') + '</span><span class="tn">-' + pad2(d.nr || 0) + '</span>'; }
+function lastExportText(at) {
+  var d = new Date(at), n = new Date();
+  var today = d.getFullYear() === n.getFullYear() && d.getMonth() === n.getMonth() && d.getDate() === n.getDate();
+  return today ? fmtT(at) + ' Uhr' : fmtDT(at) + ' Uhr';
 }
 
 /* ================= Ansicht: Start ================= */
@@ -601,14 +679,16 @@ function renderSetup() {
   currentDoorId = null;
   app.innerHTML =
     '<main class="pg">' +
-      '<div class="hero c"><img class="brand" src="logo-full.png" alt="E+S Brandschutz"><h1 class="lt">Türaufnahme</h1><p class="sub">Türen erfassen, Typenschild fotografieren – fertig.</p></div>' +
-      (isStandalone() ? '' : '<div class="sec"><div class="sh">Zuerst als App aufs iPhone</div>' + installSteps() + '</div><div class="sf">Danach nur noch über das Icon arbeiten.</div></div>') +
+      '<div class="hero c"><img class="brand" src="logo-full.png" alt="E+S Brandschutz"><h1 class="lt">Türaufnahme</h1><p class="sub">Türen erfassen, Typenschild fotografieren – fertig.</p>' +
+        '<div class="stat"><span id="offl">' + ic('wifi') + 'Offline wird vorbereitet…</span></div></div>' +
+      (isStandalone() ? '' : '<div class="sec"><div class="sh">Zuerst als App aufs iPhone</div>' + installSteps() + '</div><div class="sf">Danach nur noch über das Icon arbeiten – nicht mehr über Safari.</div></div>') +
       '<div class="sec"><div class="sh">Objekt</div><div class="grp"><label class="cell fld"><span class="k">Kunde</span>' +
         '<input type="text" id="kunde" value="' + esc(S.kunde) + '" placeholder="Name, Adresse" autocomplete="off" enterkeyhint="done"></label></div>' +
         '<div class="sf">Einmal eintragen – gilt für alle Türen.</div></div>' +
       '<p class="ver">Version ' + esc(VERSION) + '</p>' +
     '</main>' +
-    '<div class="tbfade"></div><footer class="tb"><button type="button" class="cap pri" data-act="start">Los geht\'s</button></footer>';
+    '<div class="tbfade"></div><footer class="tb"><button type="button" class="cap pri" data-act="start">Los geht’s</button></footer>';
+  checkOffline(0);
 }
 
 /* ================= Ansicht: Übersicht ================= */
@@ -624,16 +704,15 @@ function renderList() {
   h += '<div class="hero"><img class="brand" src="logo-full.png" alt="E+S Brandschutz"><h1 class="lt">Türaufnahme</h1>' +
        '<button type="button" class="kbtn" data-act="edit-kunde"><span>' + esc(S.kunde) + '</span>' + ic('chev') + '</button></div>';
   if (dbFailed) h += '<div class="sec"><div class="grp"><div class="cell ico note">' + sq('warn', 'var(--red)') + '<span class="ct"><b>Fotospeicher geht nicht:</b> ' + esc(dbFailed) + '. Bitte Safari normal (nicht „Privat“) nutzen, notfalls Papier.</span></div></div></div>';
-  h += '<div class="tiles"><div class="tile"><b>' + n + '</b><span>Türen</span></div><div class="tile"><b>' + nPh + '</b><span>Fotos</span></div>' +
-       '<div class="tile' + (miss ? ' warn' : '') + '"><b>' + miss + '</b><span>ohne Typenschild</span></div></div>';
-  h += '<div class="stat" id="stat"><span id="offl">' + ic('wifi') + 'Offline wird vorbereitet…</span><span class="' + (le ? 'ok' : '') + '">' + ic('clock') + (le ? 'Letzter Export ' + fmtT(le.at) + ' Uhr' : 'Noch kein Export') + '</span></div>';
+  h += tilesHTML(n, nPh, miss);
+  h += '<div class="stat" id="stat"><span id="offl">' + ic('wifi') + 'Offline wird vorbereitet…</span><span class="' + (le ? 'ok' : '') + '">' + ic('clock') + (le ? 'Letzter Export ' + lastExportText(le.at) : 'Noch kein Export') + '</span></div>';
   if (!isStandalone() && !S.hintDismissed) {
     h += '<div class="sec"><div class="sh">Tipp: als App aufs iPhone</div>' + installSteps() +
          '<button type="button" class="cell tintc" data-act="dismiss-hint">Verstanden</button></div>' +
-         '<div class="sf">Türen, die im Safari erfasst wurden, sieht man in der App nicht – und umgekehrt. Immer am selben Ort bleiben.</div></div>';
+         '<div class="sf">Türen, die in Safari erfasst wurden, sieht man in der App nicht – und umgekehrt. Immer am selben Ort bleiben.</div></div>';
   }
   if (n && unsaved >= 10) {
-    h += '<div class="sec"><div class="grp"><div class="cell ico note">' + sq('warn', 'var(--orange)') + '<span class="ct"><b>Zwischensicherung:</b> ' + plural(unsaved, 'Tür', 'Türen') + ' seit dem letzten Export.</span></div>' +
+    h += '<div class="sec"><div class="grp"><div class="cell ico note">' + sq('warn', 'var(--orange)') + '<span class="ct"><b>Zwischensicherung:</b> ' + plural(unsaved, 'Tür ist', 'Türen sind') + ' noch nicht exportiert.</span></div>' +
          '<button type="button" class="cell tintc" data-act="export">Jetzt exportieren</button></div></div>';
   }
   if (!n) h += '<div class="empty">' + ic('door') + '<b>Noch keine Tür</b>Unten auf „Neue Tür“ tippen.</div>';
@@ -654,6 +733,11 @@ function renderList() {
   hydrateThumbs(app);
   checkOffline(0);
 }
+function tilesHTML(n, nPh, miss) {
+  return '<div class="tiles"><div class="tile"><b>' + n + '</b><span>' + (n === 1 ? 'Tür' : 'Türen') + '</span></div>' +
+    '<div class="tile"><b>' + nPh + '</b><span>' + (nPh === 1 ? 'Foto' : 'Fotos') + '</span></div>' +
+    '<div class="tile' + (miss ? ' warn' : '') + '"><b>' + miss + '</b><span>Typenschild-Foto fehlt</span></div></div>';
+}
 function rowHTML(d) {
   var ts = null, nT = 0;
   d.photos.forEach(function (p) { if (p.kind === 'typenschild' && !ts) ts = p; if (p.kind === 'tuer') nT++; });
@@ -661,9 +745,9 @@ function rowHTML(d) {
   if (ts) lead = '<span class="thumb"><img data-thumb="' + esc(ts.id) + '" alt=""></span>';
   else if (d.keinTypenschild) lead = '<span class="thumb">' + ic('tag') + '</span>';
   else { lead = '<span class="thumb miss">' + ic('camera') + '</span>'; badge = '<span class="badge">Foto fehlt</span>'; }
-  if (isDup(d)) badge += '<span class="badge">Nr. doppelt</span>';
+  if (isDup(d)) badge += '<span class="badge dup">Nr. doppelt</span>';
   var l1 = [d.bereich, d.raum].filter(function (x) { return x && x.trim(); }).map(esc).join(' · ') || 'ohne Bereich';
-  var l2 = [d.schliesser, nT ? 'Tür-Foto' + (nT > 1 ? 's: ' + nT : '') : '', d.keinTypenschild ? 'kein Typenschild' : '', d.bemerkung].filter(function (x) { return x && String(x).trim(); }).join(' · ');
+  var l2 = [d.schliesser, nT ? (nT > 1 ? nT + ' Fotos ganze Tür' : 'Foto ganze Tür') : '', d.keinTypenschild ? 'kein Typenschild' : '', d.bemerkung].filter(function (x) { return x && String(x).trim(); }).join(' · ');
   return '<button type="button" class="cell row" data-act="open" data-id="' + esc(d.id) + '">' + lead +
     '<span class="rt"><span class="r1">' + esc(kennung(d)) + badge + '</span><span class="r2">' + l1 + '</span>' + (l2 ? '<span class="r3">' + esc(l2) + '</span>' : '') + '</span>' +
     ic('chev', 'chev') + '</button>';
@@ -705,22 +789,22 @@ function renderDoor(id) {
   var schlChips = uniq(customSchl.concat(SCHLIESSER));
   var herstChips = uniq(recentValues('hersteller').filter(function (v) { return HERSTELLER.indexOf(v) < 0; }).slice(0, 2).concat(HERSTELLER));
   app.innerHTML =
-    navBar({ back: true, title: kennung(d), titleId: 'doorTitle', right: '<span class="saved" id="savedInd">' + ic('check') + 'Gespeichert</span>' }) +
+    navBar({ back: true, titleHTML: titleHTML(d), titleId: 'doorTitle', right: '<span class="saved" id="savedInd">' + ic('check') + 'Gespeichert</span>' }) +
     '<main class="pg" style="padding-top:12px">' +
       '<div class="sec"><div class="sh">Geschoss</div><div class="grp">' +
         '<div class="cell blk"><div class="gg" data-field="geschoss">' + chipsHTML(GESCHOSSE, d.geschoss) +
           '<button type="button" class="chip oth' + (isOther ? ' on' : '') + '" data-v="__other">Andere</button></div></div>' +
-        '<label class="cell fld' + (isOther ? '' : ' hidden') + '" id="gOtherRow"><span class="k">Geschoss</span><input type="text" id="gOther" value="' + (isOther ? esc(d.geschoss) : '') + '" placeholder="z. B. 2.UG, TG" autocomplete="off" enterkeyhint="done"></label>' +
+        '<label class="cell fld' + (isOther ? '' : ' hidden') + '" id="gOtherRow"><span class="k">Geschoss</span><input type="text" id="gOther" maxlength="12" value="' + (isOther ? esc(d.geschoss) : '') + '" placeholder="kurz: 2.UG, TG, Haus B" autocomplete="off" enterkeyhint="done"></label>' +
         '<div class="cell nrc"><span class="k">Nummer</span><div class="stepper"><button type="button" class="stp" data-act="nr-" aria-label="Nummer minus">−</button>' +
           '<input type="text" id="nr" inputmode="numeric" pattern="[0-9]*" value="' + d.nr + '" autocomplete="off" enterkeyhint="done" aria-label="Nummer">' +
           '<button type="button" class="stp" data-act="nr+" aria-label="Nummer plus">+</button></div></div>' +
-      '</div><div class="sf warnf hidden" id="dupWarn"></div></div>' +
+      '</div><div class="sf warnf dupw hidden" id="dupWarn"></div></div>' +
+      '<div class="sec" id="photoSec"></div>' +
       '<div class="sec"><div class="sh">Lage</div><div class="grp">' +
         fieldRow('bereich', 'Bereich', d.bereich, 'z. B. Treppenhaus Nord') +
-        '<div class="cell blk"><div class="chips" data-fill="bereich">' + chipsHTML(bereichChips, d.bereich) + '</div></div>' +
+        '<div class="cell blk"><div class="chips scroll" data-fill="bereich">' + chipsHTML(bereichChips, d.bereich) + '</div></div>' +
         fieldRow('raum', 'Raum', d.raum, 'z. B. Flur → Heizung') +
       '</div></div>' +
-      '<div class="sec" id="photoSec"></div>' +
       '<div class="sec"><div class="sh">Schließer</div><div class="grp">' +
         fieldRow('schliesser', 'Modell', d.schliesser, 'z. B. GEZE TS 5000', 'autocorrect="off" autocapitalize="off" spellcheck="false"') +
         '<div class="cell blk"><div class="chips" data-fill="schliesser">' + chipsHTML(schlChips, d.schliesser) + '</div></div>' +
@@ -733,8 +817,8 @@ function renderDoor(id) {
         '<div class="cell blk"><div class="mk">Anforderung</div><div class="chips" data-field="anforderung">' + chipsHTML(ANFORDERUNG, d.anforderung) + '</div></div>' +
         '<div class="cell blk"><div class="mk">Flügel</div><div class="seg" data-field="fluegel">' + chipsHTML(FLUEGEL, d.fluegel) + '</div></div>' +
         '<div class="cell blk"><div class="mk">Material</div><div class="chips" data-field="material">' + chipsHTML(MATERIAL, d.material) + '</div></div>' +
-        fieldRow('hersteller', 'Hersteller', d.hersteller, 'Hersteller') +
-        '<div class="cell blk"><div class="chips" data-fill="hersteller">' + chipsHTML(herstChips, d.hersteller) + '</div></div>' +
+        fieldRow('hersteller', 'Hersteller', d.hersteller, 'z. B. Hörmann') +
+        '<div class="cell blk"><div class="chips scroll" data-fill="hersteller">' + chipsHTML(herstChips, d.hersteller) + '</div></div>' +
         '<div class="cell blk"><div class="mk">Feststellanlage</div><div class="seg" data-field="fsa">' + chipsHTML(FSA, d.fsa) + '</div></div>' +
         fieldRow('kundenNr', 'Kunden-Nr.', d.kundenNr, 'Nr. an der Tür') +
       '</details></div>' +
@@ -764,7 +848,7 @@ function photoBlock(d, kind, title) {
     h += '<label for="camInput" class="camBig" data-cam="' + kind + '">' + ic('camera') + title + ' fotografieren</label>';
   }
   h += '</div><label for="libInput" class="cell ico link" data-cam="' + kind + '"><span class="sq" style="background:transparent;color:var(--tint)">' + ic('photo') + '</span><span class="ct">Aus Fotos-App wählen</span></label>';
-  if (kind === 'typenschild') h += '<label class="cell tap"><span class="ct">Kein Typenschild / unlesbar</span><span class="swl"><input type="checkbox" data-chk="keinTS"' + (d.keinTypenschild ? ' checked' : '') + '><span class="sw"></span></span></label>';
+  if (kind === 'typenschild' && !ps.length) h += '<label class="cell tap"><span class="ct">Kein Typenschild / unlesbar</span><span class="swl"><input type="checkbox" data-chk="keinTS"' + (d.keinTypenschild ? ' checked' : '') + '><span class="sw"></span></span></label>';
   return h + '</div>';
 }
 function renderPhotoSection() {
@@ -774,20 +858,30 @@ function renderPhotoSection() {
   hydrateThumbs(sec);
 }
 function updateKenn(d) {
-  var k = kennung(d);
-  var t = $('#doorTitle'); if (t) t.textContent = k;
-  var nr = $('#nr'); if (nr && document.activeElement !== nr) nr.value = d.nr;
+  var k = kennung(d), dup = isDup(d);
+  var t = $('#doorTitle'); if (t) t.innerHTML = titleHTML(d);
+  var nr = $('#nr'); if (nr) { if (document.activeElement !== nr) nr.value = d.nr; nr.classList.toggle('dup', dup); }
   var w = $('#dupWarn');
-  if (w) { if (isDup(d)) { w.textContent = '⚠ ' + k + ' gibt es schon – bitte Nummer prüfen'; w.classList.remove('hidden'); } else w.classList.add('hidden'); }
+  if (w) { if (dup) { w.innerHTML = ic('warn') + '<span>' + esc(k) + ' gibt es schon – bitte Nummer prüfen</span>'; w.classList.remove('hidden'); } else w.classList.add('hidden'); }
 }
 function updateMoreCnt(d) {
   var n = MORE_FIELDS.filter(function (f) { return d[f] && String(d[f]).trim(); }).length;
   var el = $('#moreCnt'); if (el) el.textContent = n ? n + ' ausgefüllt' : 'optional';
 }
+function normGeschoss(g) {
+  g = String(g || '').trim().replace(/\s+/g, ' ');
+  var u = g.toUpperCase().replace(/\s+/g, '');
+  for (var i = 0; i < GESCHOSSE.length; i++) if (GESCHOSSE[i].toUpperCase() === u) return GESCHOSSE[i];
+  var m = u.match(/^(\d+)\.?(OG|UG)$/); if (m) return m[1] + '.' + m[2];
+  if (u === 'KG' || u === 'TG') return u;
+  return g;
+}
 function setGeschoss(d, g) {
-  if (d.geschoss === g) return;
+  g = normGeschoss(g);
+  if (!g || d.geschoss === g) return;
   d.geschoss = g;
-  if (!d.nrManual) d.nr = nextNr(g, d.id);
+  // nur neu angelegte Türen automatisch neu nummerieren – bestehende behalten ihre Nr.
+  if (d.fresh && !d.nrManual) d.nr = nextNr(g, d.id);
   touch(d); saveState(); updateKenn(d);
 }
 function markChips(box, val) { Array.prototype.forEach.call(box.children, function (c) { c.classList.toggle('on', c.getAttribute('data-v') === val); }); }
@@ -800,7 +894,7 @@ function setNr(d, n) {
 
 /* ================= Ansicht: Export ================= */
 var zipState = { building: false, p: 0 };
-var lastZip = null;
+var lastZip = null, sharing = false;
 function zipCurrent() {
   if (!lastZip) return false;
   if (S.doors.length !== lastZip.nDoors) return false;
@@ -813,10 +907,9 @@ function renderExport() {
   app.innerHTML =
     navBar({ back: true, title: 'Export' }) +
     '<main class="pg" style="padding-top:12px">' +
-      '<div class="tiles"><div class="tile"><b>' + doors.length + '</b><span>Türen</span></div><div class="tile"><b>' + nPh + '</b><span>Fotos</span></div>' +
-        '<div class="tile' + (missList.length ? ' warn' : '') + '"><b>' + missList.length + '</b><span>ohne Typenschild</span></div></div>' +
-      '<div class="stat">' + (missList.length ? '<span class="warn">' + ic('warn') + 'Ohne Typenschild-Foto: ' + esc(missList.join(', ')) + '</span>' : '') +
-        '<span' + (S.lastExport ? ' class="ok"' : '') + '>' + ic('clock') + (S.lastExport ? 'Letzter Export ' + fmtDT(S.lastExport.at) + ' (' + plural(S.lastExport.count, 'Tür', 'Türen') + ')' : 'Noch kein Export') + '</span></div>' +
+      tilesHTML(doors.length, nPh, missList.length) +
+      '<div class="stat">' + (missList.length ? '<span class="warn">' + ic('warn') + '<span>Typenschild-Foto fehlt bei: ' + missList.map(function (k) { return '<span class="nw">' + esc(k) + '</span>'; }).join(', ') + '</span></span>' : '') +
+        '<span' + (S.lastExport ? ' class="ok"' : '') + '>' + ic('clock') + (S.lastExport ? 'Letzter Export ' + lastExportText(S.lastExport.at) + ' (' + plural(S.lastExport.count, 'Tür', 'Türen') + ')' : 'Noch kein Export') + '</span></div>' +
       '<div class="sec"><div class="sh">Alles mit Fotos</div><div class="grp" id="zipArea"></div>' +
         '<div class="sf">Am sichersten zuerst „In Dateien sichern“, danach nochmal teilen per WhatsApp oder Mail ans Büro.</div></div>' +
       '<div class="sec"><div class="sh">Nur Liste</div><div class="grp">' +
@@ -831,8 +924,14 @@ function refreshZipArea() {
     el.innerHTML = '<div class="cell blk"><div style="display:flex;align-items:center;gap:12px">' + sq('zip', 'var(--tint)') + '<span id="zipTxt">ZIP wird erstellt … bitte warten</span></div><div class="prog"><i id="zipProg" style="width:' + Math.round(zipState.p * 100) + '%"></i></div></div>';
     return;
   }
+  if (pendingTotal() > 0) {
+    el.innerHTML = '<div class="cell ico">' + sq('clock', 'var(--orange)') + '<span class="ct">Fotos werden noch gespeichert … bitte kurz warten</span></div>' +
+      '<div class="cell blk"><button type="button" class="cap pri w" disabled>ZIP erstellen</button></div>';
+    return;
+  }
   if (lastZip && zipCurrent()) {
-    el.innerHTML = '<div class="cell ico">' + sq('zip', 'var(--green)') + '<span class="ct" style="word-break:break-all;font-size:15px">' + esc(lastZip.name) + '</span><span class="cv">' + fmtMB(lastZip.blob.size) + '</span></div>' +
+    el.innerHTML = '<div class="cell ico">' + sq('zip', 'var(--green)') + '<span class="ct"><b>ZIP bereit</b> · ' + plural(lastZip.nDoors, 'Tür', 'Türen') + ' · ' + plural(lastZip.nPhotos, 'Foto', 'Fotos') +
+        '<span class="zipn">' + esc(lastZip.name) + '</span></span><span class="cv">' + fmtMB(lastZip.blob.size) + '</span></div>' +
       (lastZip.missing ? '<div class="cell ico note">' + sq('warn', 'var(--orange)') + '<span class="ct">' + plural(lastZip.missing, 'Foto fehlte', 'Fotos fehlten') + ' im Speicher</span></div>' : '') +
       '<div class="cell blk"><button type="button" class="cap pri w" data-act="share-zip">' + ic('share') + 'Teilen / Sichern …</button>' +
       '<button type="button" class="cap sec2 w" data-act="dl-zip">' + ic('download') + 'Herunterladen</button></div>';
@@ -866,13 +965,18 @@ function planExport(metaById) {
   return list;
 }
 function csvCell(v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }
+// Textwerte so schützen, dass Excel sie nicht als Formel, Zahl oder Datum umdeutet ("- defekt", "0815", "1.2")
+function xl(v) {
+  v = String(v == null ? '' : v);
+  return (/^[=+\-@]/.test(v) || /^[\d\s.,\/:\-]+$/.test(v)) ? '\t' + v : v;
+}
 function buildCSV(plan) {
   var head = ['Kennung', 'Geschoss', 'Nr', 'Bereich', 'Raum', 'Schließer', 'Bemerkung', 'Anforderung', 'Flügel', 'Material', 'Hersteller', 'Feststellanlage', 'Türnummer Kunde', 'Kein Typenschild', 'Fotos Typenschild', 'Fotos Tür', 'Dateien', 'Erfasst', 'Geändert'];
   var rows = [head.map(csvCell).join(';')];
   plan.forEach(function (e) {
     var d = e.door;
     var nTS = e.files.filter(function (f) { return f.kind === 'typenschild'; }).length;
-    rows.push([e.base, d.geschoss, d.nr, d.bereich, d.raum, d.schliesser, d.bemerkung, d.anforderung, d.fluegel, d.material, d.hersteller, d.fsa, d.kundenNr,
+    rows.push([xl(e.base), xl(d.geschoss), d.nr, xl(d.bereich), xl(d.raum), xl(d.schliesser), xl(d.bemerkung), xl(d.anforderung), xl(d.fluegel), xl(d.material), xl(d.hersteller), xl(d.fsa), xl(d.kundenNr),
       d.keinTypenschild ? 'ja' : '', nTS, e.files.length - nTS, e.files.map(function (f) { return f.name.replace('fotos/', ''); }).join(', '), fmtDT(d.createdAt), fmtDT(d.updatedAt)].map(csvCell).join(';'));
   });
   return '﻿' + rows.join('\r\n') + '\r\n';
@@ -894,7 +998,7 @@ function buildOverview(plan, okIds) {
     var opt = [d.anforderung, d.fluegel, d.material, d.hersteller, d.fsa ? 'FSA: ' + d.fsa : '', d.kundenNr ? 'Kd-Nr: ' + d.kundenNr : ''].filter(Boolean).map(esc).join(' · ');
     return '<tr><td><b>' + esc(e.base) + '</b></td><td>' + esc(d.bereich) + '</td><td>' + esc(d.raum) + '</td><td>' + esc(d.schliesser) + '</td><td>' + esc(d.bemerkung) + (opt ? '<br><small>' + opt + '</small>' : '') + (d.keinTypenschild ? '<br><small>kein Typenschild</small>' : '') + '</td><td class="i">' + imgs + '</td></tr>';
   }).join('');
-  return '<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Türaufnahme ' + esc(S.kunde) + '</title><style>body{font:14px/1.4 -apple-system,Segoe UI,Arial,sans-serif;margin:24px;color:#111}h1{margin:0 0 4px}table{border-collapse:collapse;width:100%;margin-top:16px}th,td{border:1px solid #d1d1d6;padding:6px 8px;vertical-align:top;text-align:left}th{background:#f2f2f7}td.i img{height:140px;margin:2px;border-radius:6px;border:1px solid #ddd}small{color:#555}</style></head><body>' +
+  return '<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Türaufnahme ' + esc(S.kunde) + '</title><style>body{font:14px/1.4 -apple-system,Segoe UI,Arial,sans-serif;margin:24px;color:#111}h1{margin:0 0 4px}table{border-collapse:collapse;width:100%;margin-top:16px}th,td{border:1px solid #d1d1d6;padding:6px 8px;vertical-align:top;text-align:left}th{background:#f2f2f7}td{white-space:pre-wrap}td.i{white-space:normal}td.i img{height:140px;margin:2px;border-radius:6px;border:1px solid #ddd}small{color:#555}</style></head><body>' +
     '<h1>Türaufnahme – ' + esc(S.kunde) + '</h1><div>' + plan.length + ' Türen · exportiert ' + esc(fmtDT(nowISO())) + ' · E+S Brandschutz</div>' +
     '<table><thead><tr><th>Tür</th><th>Bereich</th><th>Raum</th><th>Schließer</th><th>Bemerkung / Weitere</th><th>Fotos</th></tr></thead><tbody>' + rows + '</tbody></table></body></html>';
 }
@@ -958,17 +1062,24 @@ function buildZip(onProgress) {
       var log = []; try { log = JSON.parse(localStorage.getItem(LOGKEY) || '[]'); } catch (e) {}
       if (missing.length) log.push('Fehlende Fotos beim Export: ' + missing.join(', '));
       if (log.length) zw.add('fehlerprotokoll.txt', utf8(log.join('\r\n') + '\r\nVersion ' + VERSION + '\r\n' + navigator.userAgent + '\r\n'));
+      try {   // beschädigte Text-Sicherungen mitgeben, damit nichts verloren ist
+        for (var k = 0; k < localStorage.length; k++) {
+          var key = localStorage.key(k);
+          if (key && key.indexOf(KEY + '.defekt.') === 0) zw.add('sicherung/' + safeName(key) + '.json', utf8(localStorage.getItem(key) || ''));
+        }
+      } catch (e) { logErr('zip-backup', e); }
       var blob = zw.finish();
-      return { blob: blob, name: 'Tueraufnahme_' + (safeName(S.kunde) || 'Objekt') + '_' + stamp() + '.zip', builtAt: builtAt, nDoors: nDoors, missing: missing.length };
+      return { blob: blob, name: 'Tueraufnahme_' + (safeName(S.kunde) || 'Objekt') + '_' + stamp() + '.zip', builtAt: builtAt, nDoors: nDoors, nPhotos: all.length - missing.length, missing: missing.length };
     });
   });
 }
 function buildZipUI() {
   if (zipState.building) return;
+  if (pendingTotal() > 0) { toast('Fotos werden noch gespeichert – bitte kurz warten', 'err', 3000); refreshZipArea(); return; }
   zipState.building = true; zipState.p = 0; refreshZipArea();
   buildZip(function (p) { zipState.p = p; var pr = $('#zipProg'); if (pr) pr.style.width = Math.round(p * 100) + '%'; }).then(function (z) {
     lastZip = z;
-    toast(z.missing ? 'ZIP fertig, aber ' + z.missing + ' Foto(s) fehlten' : '✓ ZIP fertig', z.missing ? 'err' : '', 3000);
+    toast(z.missing ? 'ZIP fertig, aber ' + z.missing + ' Foto(s) fehlten' : 'ZIP fertig', z.missing ? 'err' : 'ok', 3000);
   }, function (e) {
     logErr('zip', e); lastZip = null;
     toast('ZIP fehlgeschlagen: ' + errMsg(e), 'err', 7000);
@@ -1003,24 +1114,33 @@ function closeOv() {
   ov.innerHTML = ''; ov.classList.add('hidden');
 }
 function viewPhoto(id) {
-  var d = null, idx = 0, tot = 0, kind = '';
+  var d = null, idx = 0, kind = '', same = [];
   S.doors.forEach(function (x) { x.photos.forEach(function (p) { if (p.id === id) { d = x; kind = p.kind; } }); });
-  if (d) { var same = d.photos.filter(function (p) { return p.kind === kind; }); tot = same.length; same.forEach(function (p, i) { if (p.id === id) idx = i + 1; }); }
+  if (d) { same = d.photos.filter(function (p) { return p.kind === kind; }); same.forEach(function (p, i) { if (p.id === id) idx = i; }); }
+  var doorAtStart = currentDoorId;
   getRec('photos', id).then(function (rec) {
+    if (currentDoorId !== doorAtStart || curView !== 'door') return;   // inzwischen weitergetippt
     if (!rec || !rec.data) { toast('Foto nicht gefunden', 'err'); return; }
     closeOv();
     ovURL = URL.createObjectURL(new Blob([rec.data], { type: rec.mime || 'image/jpeg' }));
+    var prev = idx > 0 ? same[idx - 1].id : '', next = idx < same.length - 1 ? same[idx + 1].id : '';
     ov.innerHTML = '<div class="ovt"><button type="button" class="gbtn circ dark" data-ov="close" aria-label="Schließen">' + ic('xmark') + '</button>' +
-      '<div class="ovtitle">' + esc((d ? kennung(d) + ' · ' : '') + (kind === 'typenschild' ? 'Typenschild' : 'Ganze Tür') + ' ' + idx + ' von ' + tot) + '</div><span class="spacer"></span></div>' +
+      '<div class="ovtitle">' + esc((d ? kennung(d) + ' · ' : '') + (kind === 'typenschild' ? 'Typenschild' : 'Ganze Tür') + ' ' + (idx + 1) + ' von ' + Math.max(1, same.length)) + '</div><span class="spacer"></span></div>' +
       '<div class="sc" id="ovSc"><img src="' + ovURL + '" alt=""></div>' +
-      '<div class="ovb"><span>Tippen zum Zoomen</span><button type="button" class="gbtn circ dark red" data-ov="del" data-id="' + esc(id) + '" aria-label="Foto löschen">' + ic('trash') + '</button></div>';
+      '<div class="ovb">' +
+        '<button type="button" class="gbtn circ dark" data-ov="go" data-id="' + esc(prev) + '" aria-label="Voriges Foto"' + (prev ? '' : ' disabled') + '>' + ic('back') + '</button>' +
+        '<button type="button" class="gbtn circ dark" data-ov="go" data-id="' + esc(next) + '" aria-label="Nächstes Foto"' + (next ? '' : ' disabled') + '>' + ic('chev') + '</button>' +
+        '<span class="hint">Tippen zum Zoomen</span>' +
+        '<button type="button" class="gbtn circ dark red" data-ov="del" data-id="' + esc(id) + '" aria-label="Foto löschen">' + ic('trash') + '</button></div>';
     ov.classList.remove('hidden');
   }).catch(function (e) { logErr('viewPhoto', e); toast('Foto konnte nicht geöffnet werden', 'err'); });
 }
 ov.addEventListener('click', function (e) {
   var b = e.target.closest('[data-ov]');
   if (b) {
-    if (b.getAttribute('data-ov') === 'close') closeOv();
+    var what = b.getAttribute('data-ov');
+    if (what === 'close') closeOv();
+    else if (what === 'go') { if (b.getAttribute('data-id')) viewPhoto(b.getAttribute('data-id')); }
     else deletePhoto(b.getAttribute('data-id'));
     return;
   }
@@ -1089,11 +1209,22 @@ var ACT = {
   'dismiss-hint': function () { S.hintDismissed = true; saveState(); renderList(); },
   'zip': function () { buildZipUI(); },
   'share-zip': function () {
-    if (!lastZip) return;
+    if (!lastZip || sharing) return;
+    if (pendingTotal() > 0 || !zipCurrent()) { toast('Daten haben sich geändert – bitte ZIP neu erstellen', 'err', 4000); refreshZipArea(); return; }
     var z = lastZip;
-    shareFile(z.blob, z.name, 'application/zip').then(function (r) { if (r === 'shared' || r === 'downloaded') { markExported(z); toast('✓ Export erledigt'); } });
+    sharing = true;
+    shareFile(z.blob, z.name, 'application/zip').then(function (r) {
+      sharing = false;
+      if (r === 'shared' || r === 'downloaded') { markExported(z); toast('Export erledigt', 'ok'); }
+    }, function (e) { sharing = false; logErr('share-zip', e); });
   },
-  'dl-zip': function () { if (lastZip) { downloadBlob(lastZip.blob, lastZip.name); markExported(lastZip); } },
+  'dl-zip': function () {
+    if (!lastZip || sharing) return;
+    if (pendingTotal() > 0 || !zipCurrent()) { toast('Daten haben sich geändert – bitte ZIP neu erstellen', 'err', 4000); refreshZipArea(); return; }
+    downloadBlob(lastZip.blob, lastZip.name);
+    // In der Home-Bildschirm-App ist ein Download nicht sicher nachweisbar -> dort nicht als gesichert zählen
+    if (!isStandalone()) markExported(lastZip);
+  },
   'share-csv': function () {
     if (!S.doors.length) { toast('Noch keine Türen'); return; }
     var plan = planExport({});
@@ -1104,6 +1235,8 @@ var ACT = {
 
 /* ================= Ereignisse ================= */
 app.addEventListener('click', function (e) {
+  // Schutz gegen Doppeltipp: der zweite Tipp landet sonst in der gerade neu aufgebauten Ansicht
+  if (Date.now() - viewAt < 450) { e.preventDefault(); e.stopPropagation(); return; }
   var cam = e.target.closest('[data-cam]');
   if (cam) {
     if (dbFailed) { e.preventDefault(); toast('Fotospeicher geht nicht – bitte Papier', 'err', 5000); return; }
@@ -1111,10 +1244,29 @@ app.addEventListener('click', function (e) {
     return; // Standardverhalten: Label öffnet Kamera
   }
   var chip = e.target.closest('.chip');
-  if (chip && chip.parentElement) { onChip(chip); return; }
+  if (chip && chip.parentElement) {
+    var box = chip.parentElement;
+    if (tooSoon('chip:' + (box.getAttribute('data-field') || box.getAttribute('data-fill')) + ':' + chip.getAttribute('data-v'), 350)) return;
+    onChip(chip); lastTap.t = Date.now(); return;
+  }
   var a = e.target.closest('[data-act]');
-  if (a && ACT[a.getAttribute('data-act')]) { e.preventDefault(); ACT[a.getAttribute('data-act')](a); }
+  if (a && ACT[a.getAttribute('data-act')]) {
+    e.preventDefault();
+    var act = a.getAttribute('data-act');
+    // gleiche Aktion direkt nochmal = versehentlicher Doppeltipp (außer −/+, die sollen zählen)
+    var wait = /^(share-zip|dl-zip|share-csv|zip)$/.test(act) ? 1500 : 350;
+    if (act !== 'nr-' && act !== 'nr+' && tooSoon('act:' + act + ':' + (a.getAttribute('data-id') || ''), wait)) return;
+    ACT[act](a);
+    lastTap.t = Date.now();   // Zeit nach Dialogen (confirm) neu setzen
+  }
 });
+var lastTap = { key: null, t: 0 };
+function tooSoon(key, ms) {
+  var n = Date.now();
+  if (lastTap.key === key && n - lastTap.t < ms) return true;
+  lastTap = { key: key, t: n };
+  return false;
+}
 function onChip(chip) {
   var box = chip.parentElement, v = chip.getAttribute('data-v'), d = findDoor(currentDoorId);
   if (!d) return;
@@ -1183,16 +1335,42 @@ function registerSW() {
     navigator.serviceWorker.addEventListener('controllerchange', function () { checkOffline(0); });
   } catch (e) { logErr('sw', e); }
 }
+// Zweites Safari-Fenster hat Daten geändert -> übernehmen statt überschreiben
+window.addEventListener('storage', function (e) {
+  if (e.key !== KEY) return;
+  S = loadState();
+  toast('In einem anderen Fenster geändert – neu geladen', 'err', 4000);
+  if (curView === 'door' && !findDoor(currentDoorId)) { currentDoorId = null; go('list'); }
+  else if (curView && curView !== 'setup') rerenderKeepScroll();
+});
+function startUI() {
+  var v = loadView();
+  if (!S.kunde) go('setup');
+  else if (v && v.view === 'door' && v.id && findDoor(v.id)) go('door', v.id);
+  else if (v && v.view === 'export') go('export');
+  else go('list');
+  viewAt = 0;   // Doppeltipp-Schutz nur nach Tipp-ausgelösten Wechseln, nicht beim Start
+}
 function init() {
   registerSW();
-  db().then(reconcile).catch(function (e) {
+  var started = false;
+  function startOnce() { if (!started) { started = true; startUI(); } }
+  // Oberfläche spätestens nach 4 s zeigen, auch wenn der Fotospeicher hängt (Texte gehen dann trotzdem)
+  var timer = setTimeout(function () {
+    if (started) return;
+    dbFailed = 'Fotospeicher antwortet nicht – App schließen und neu öffnen';
+    logErr('db-timeout', new Error(dbFailed));
+    startOnce();
+  }, 4000);
+  db().then(reconcile).then(function () {
+    clearTimeout(timer);
+    if (started && dbFailed) { dbFailed = null; rerenderKeepScroll(); toast('Fotospeicher wieder bereit', 'ok'); }
+    startOnce();
+  }, function (e) {
+    clearTimeout(timer);
     logErr('db', e); dbFailed = errMsg(e);
-  }).then(function () {
-    var v = loadView();
-    if (!S.kunde) go('setup');
-    else if (v && v.view === 'door' && v.id && findDoor(v.id)) go('door', v.id);
-    else if (v && v.view === 'export') go('export');
-    else go('list');
+    if (started) rerenderKeepScroll();
+    startOnce();
   });
 }
 init();

@@ -1,5 +1,5 @@
 /* Türaufnahme – Service Worker: hält die App offline verfügbar. */
-var CACHE = 'tueraufnahme-v2';
+var CACHE = 'tueraufnahme-v3';
 var ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-512.png', './logo-full.png', './logo-mark.png'];
 
 function clean(res) {
@@ -34,7 +34,11 @@ self.addEventListener('fetch', function (e) {
   if (req.method !== 'GET') return;
   var url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
-  var key = req.mode === 'navigate' ? './index.html' : req;
+  // Nur Aufrufe der App-Seite selbst (Ordner oder index.html) zählen als App – sonst würde z. B. ein
+  // geöffnetes Icon-Bild die gespeicherte App ersetzen.
+  var scopePath = new URL(self.registration.scope).pathname;
+  var isApp = req.mode === 'navigate' && (url.pathname === scopePath || url.pathname === scopePath + 'index.html');
+  var key = isApp ? './index.html' : req;
   e.respondWith(
     caches.open(CACHE).then(function (c) {
       return c.match(key, { ignoreSearch: true }).then(function (hit) {
