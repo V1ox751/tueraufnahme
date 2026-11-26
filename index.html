@@ -590,7 +590,7 @@ function renderDoor(id) {
         '<input type="text" id="gOther" class="' + (isOther ? '' : 'hidden') + '" value="' + (isOther ? esc(d.geschoss) : '') + '" placeholder="z. B. 2.UG, TG, Zwischengeschoss" autocomplete="off" enterkeyhint="done">' +
         '<div class="nrrow"><span class="lbl">Nr.</span><button type="button" class="nrbtn" data-act="nr-">−</button>' +
           '<input type="text" id="nr" inputmode="numeric" pattern="[0-9]*" value="' + d.nr + '" autocomplete="off" enterkeyhint="done">' +
-          '<button type="button" class="nrbtn" data-act="nr+">+</button><span class="kenn" id="kenn">' + esc(kennung(d)) + '</span></div>' +
+          '<button type="button" class="nrbtn" data-act="nr+">+</button></div>' +
         '<div id="dupWarn" class="warn hidden"></div>' +
       '</section>' +
       '<section class="card">' +
